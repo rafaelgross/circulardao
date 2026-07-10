@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1050" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <rect width="1700" height="1050" fill="white"/>
+
+  <!-- Fronteira do sistema -->
+  <rect x="330" y="70" width="1050" height="930" fill="none" stroke="#333" stroke-width="2.5" rx="8"/>
+  <text x="855" y="105" text-anchor="middle" font-size="26" font-weight="bold" fill="#1a1a1a">CircularDAO</text>
+
+  <!-- Subsistema: cadeia material -->
+  <rect x="355" y="125" width="1000" height="385" fill="#f4faf4" stroke="#7aa87a" stroke-width="1.5" stroke-dasharray="8 5" rx="8"/>
+  <text x="375" y="152" font-size="19" font-style="italic" fill="#3d6b3d">Cadeia material</text>
+
+  <!-- Subsistema: cadeia de governança -->
+  <rect x="355" y="530" width="1000" height="450" fill="#f4f7fb" stroke="#7a92b8" stroke-width="1.5" stroke-dasharray="8 5" rx="8"/>
+  <text x="375" y="557" font-size="19" font-style="italic" fill="#3d5a8a">Cadeia de governança</text>
+
+  <!-- ==== Associações ator-caso de uso ==== -->
+  <g stroke="#666" stroke-width="1.6">
+    <!-- Cooperado -->
+    <line x1="205" y1="545" x2="390" y2="234"/>
+    <line x1="205" y1="555" x2="907" y2="458"/>
+    <line x1="205" y1="575" x2="348" y2="762"/>
+    <line x1="205" y1="590" x2="352" y2="882"/>
+    <line x1="205" y1="560" x2="632" y2="600"/>
+    <line x1="205" y1="568" x2="768" y2="722"/>
+    <!-- Reciclador -->
+    <line x1="205" y1="205" x2="415" y2="336"/>
+    <line x1="205" y1="220" x2="420" y2="746"/>
+    <!-- Governo -->
+    <line x1="1495" y1="262" x2="1180" y2="440"/>
+    <!-- Auditor -->
+    <line x1="1495" y1="442" x2="1197" y2="452"/>
+    <!-- Admin DAO -->
+    <line x1="1495" y1="700" x2="1046" y2="204"/>
+    <line x1="1495" y1="730" x2="1198" y2="858"/>
+  </g>
+
+  <!-- ==== Casos de uso: cadeia material ==== -->
+  <g>
+    <ellipse cx="500" cy="210" rx="140" ry="42" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="500" y="205" text-anchor="middle" font-size="17">Registrar lote</text>
+    <text x="500" y="226" text-anchor="middle" font-size="17">de resíduo</text>
+
+    <ellipse cx="900" cy="185" rx="152" ry="45" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="900" y="180" text-anchor="middle" font-size="17">Emitir Passaporte Digital</text>
+    <text x="900" y="201" text-anchor="middle" font-size="17">de Resíduo (ERC-1155)</text>
+
+    <ellipse cx="560" cy="350" rx="150" ry="44" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="560" y="345" text-anchor="middle" font-size="17">Registrar etapas do ciclo</text>
+    <text x="560" y="366" text-anchor="middle" font-size="17">(coleta → reinserção)</text>
+
+    <ellipse cx="950" cy="330" rx="140" ry="42" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="950" y="325" text-anchor="middle" font-size="17">Emitir créditos</text>
+    <text x="950" y="346" text-anchor="middle" font-size="17">circulares (CRC)</text>
+
+    <ellipse cx="1050" cy="455" rx="145" ry="42" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="1050" y="450" text-anchor="middle" font-size="17">Consultar rastreabilidade</text>
+    <text x="1050" y="471" text-anchor="middle" font-size="17">pública</text>
+  </g>
+
+  <!-- ==== Casos de uso: cadeia de governança ==== -->
+  <g>
+    <ellipse cx="480" cy="780" rx="140" ry="42" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="480" y="775" text-anchor="middle" font-size="17">Conectar carteira</text>
+    <text x="480" y="796" text-anchor="middle" font-size="17">(EIP-1193)</text>
+
+    <ellipse cx="480" cy="900" rx="135" ry="40" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="480" y="895" text-anchor="middle" font-size="17">Delegar poder</text>
+    <text x="480" y="916" text-anchor="middle" font-size="17">de voto</text>
+
+    <ellipse cx="760" cy="610" rx="130" ry="40" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="760" y="616" text-anchor="middle" font-size="17">Criar proposta</text>
+
+    <ellipse cx="900" cy="730" rx="135" ry="40" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="900" y="725" text-anchor="middle" font-size="17">Votar em</text>
+    <text x="900" y="746" text-anchor="middle" font-size="17">propostas</text>
+
+    <ellipse cx="1060" cy="880" rx="145" ry="42" fill="white" stroke="#333" stroke-width="2"/>
+    <text x="1060" y="875" text-anchor="middle" font-size="17">Executar decisão</text>
+    <text x="1060" y="896" text-anchor="middle" font-size="17">aprovada</text>
+  </g>
+
+  <!-- ==== Relações «include» ==== -->
+  <g stroke="#444" stroke-width="1.6" stroke-dasharray="7 5">
+    <line x1="642" y1="203" x2="744" y2="192" marker-end="url(#arr)"/>
+    <line x1="712" y1="345" x2="806" y2="336" marker-end="url(#arr)"/>
+  </g>
+  <text x="693" y="182" text-anchor="middle" font-size="15" font-style="italic" fill="#444">«include»</text>
+  <text x="759" y="326" text-anchor="middle" font-size="15" font-style="italic" fill="#444">«include»</text>
+
+  <!-- ==== Atores ==== -->
+  <g stroke="#1a1a1a" stroke-width="2.5" fill="none">
+    <!-- Reciclador (esq. topo) -->
+    <circle cx="170" cy="150" r="17"/>
+    <line x1="170" y1="167" x2="170" y2="215"/>
+    <line x1="140" y1="185" x2="200" y2="185"/>
+    <line x1="170" y1="215" x2="148" y2="252"/>
+    <line x1="170" y1="215" x2="192" y2="252"/>
+    <!-- Cooperado (esq. meio) -->
+    <circle cx="170" cy="520" r="17"/>
+    <line x1="170" y1="537" x2="170" y2="585"/>
+    <line x1="140" y1="555" x2="200" y2="555"/>
+    <line x1="170" y1="585" x2="148" y2="622"/>
+    <line x1="170" y1="585" x2="192" y2="622"/>
+    <!-- Governo (dir. topo) -->
+    <circle cx="1530" cy="250" r="17"/>
+    <line x1="1530" y1="267" x2="1530" y2="315"/>
+    <line x1="1500" y1="285" x2="1560" y2="285"/>
+    <line x1="1530" y1="315" x2="1508" y2="352"/>
+    <line x1="1530" y1="315" x2="1552" y2="352"/>
+    <!-- Auditor (dir. meio) -->
+    <circle cx="1530" cy="420" r="17"/>
+    <line x1="1530" y1="437" x2="1530" y2="485"/>
+    <line x1="1500" y1="455" x2="1560" y2="455"/>
+    <line x1="1530" y1="485" x2="1508" y2="522"/>
+    <line x1="1530" y1="485" x2="1552" y2="522"/>
+    <!-- Admin DAO (dir. baixo) -->
+    <circle cx="1530" cy="690" r="17"/>
+    <line x1="1530" y1="707" x2="1530" y2="755"/>
+    <line x1="1500" y1="725" x2="1560" y2="725"/>
+    <line x1="1530" y1="755" x2="1508" y2="792"/>
+    <line x1="1530" y1="755" x2="1552" y2="792"/>
+  </g>
+  <g font-size="19" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    <text x="170" y="285">Reciclador</text>
+    <text x="170" y="655">Cooperado</text>
+    <text x="1530" y="385">Governo</text>
+    <text x="1530" y="555">Auditor</text>
+    <text x="1530" y="825">Admin DAO</text>
+  </g>
+</svg>
