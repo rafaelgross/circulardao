@@ -1,0 +1,13 @@
+# Segredos — NUNCA commitar
+.env
+.env.*
+deployments/sepolia-experiment.json
+
+# Build do Hardhat
+node_modules/
+cache/
+artifacts/
+
+# Diversos
+*.log
+.DS_Store

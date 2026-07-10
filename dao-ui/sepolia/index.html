@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CircularDAO — governança descentralizada para cooperativas de reciclagem: propostas, votação on-chain e passaportes digitais de resíduos.">
+<meta name="theme-color" content="#0e7a4a">
+<title>CircularDAO — Assembleia Digital da Reciclagem</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<style>
+:root{
+  --verde:#0e7a4a; --verde-escuro:#0a5c38; --verde-claro:#e6f4ec;
+  --amarelo:#f4b942; --vermelho:#c94f3d; --azul:#2563eb;
+  --fundo:#f4f6f4; --card:#ffffff; --texto:#1d2b24; --texto-suave:#5b6b62;
+  --borda:#e2e8e4; --raio:16px; --sombra:0 2px 10px rgba(20,40,30,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,sans-serif;
+  background:var(--fundo);color:var(--texto);line-height:1.5;padding-bottom:84px}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{font-family:inherit;font-size:1rem;width:100%;padding:12px 14px;
+  border:1.5px solid var(--borda);border-radius:10px;background:#fff;color:var(--texto)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--verde);border-color:var(--verde)}
+label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 5px}
+.dica{font-size:.82rem;color:var(--texto-suave);margin-top:3px}
+
+/* ---------- Cabeçalho ---------- */
+header{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-escuro) 100%);
+  color:#fff;padding:18px 20px 16px}
+.head-row{display:flex;align-items:center;justify-content:space-between;max-width:980px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;letter-spacing:-.3px}
+.logo .folha{font-size:1.5rem}
+.logo small{display:block;font-weight:400;font-size:.72rem;opacity:.85;letter-spacing:0}
+#btnEntrar{background:#fff;color:var(--verde-escuro);font-weight:700;font-size:.95rem;
+  padding:10px 18px;border-radius:999px;box-shadow:var(--sombra)}
+#chipUsuario{display:none;align-items:center;gap:8px;background:rgba(255,255,255,.16);
+  padding:8px 14px;border-radius:999px;font-size:.88rem}
+#chipUsuario .bolinha{width:9px;height:9px;border-radius:50%;background:#7CFC9B}
+
+/* ---------- Navegação ---------- */
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--borda);
+  display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:50}
+nav button{background:none;display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:.68rem;color:var(--texto-suave);padding:6px 10px;border-radius:10px;min-width:62px}
+nav button .ico{font-size:1.35rem}
+nav button.ativo{color:var(--verde);font-weight:700;background:var(--verde-claro)}
+@media(min-width:760px){
+  body{padding-bottom:20px}
+  nav{position:static;border-top:none;max-width:980px;margin:14px auto 0;border-radius:var(--raio);
+    box-shadow:var(--sombra);padding:6px}
+  nav button{flex-direction:row;gap:8px;font-size:.9rem;padding:10px 18px}
+}
+
+/* ---------- Layout ---------- */
+main{max-width:980px;margin:0 auto;padding:18px 16px}
+.tela{display:none}
+.tela.ativa{display:block;animation:surge .25s ease}
+@keyframes surge{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.titulo{font-size:1.35rem;margin:6px 0 4px;letter-spacing:-.3px}
+p.sub{color:var(--texto-suave);font-size:.92rem;margin-bottom:16px}
+.card{background:var(--card);border-radius:var(--raio);box-shadow:var(--sombra);
+  padding:18px;margin-bottom:14px;border:1px solid var(--borda)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:760px){.grid4{grid-template-columns:repeat(4,1fr)}}
+
+/* ---------- Cards de métrica ---------- */
+.metrica{text-align:center;padding:20px 10px}
+.metrica .num{font-size:1.9rem;font-weight:800;color:var(--verde);letter-spacing:-1px}
+.metrica .rotulo{font-size:.8rem;color:var(--texto-suave);margin-top:2px}
+
+/* ---------- Banner aviso ---------- */
+.banner{display:flex;gap:12px;align-items:flex-start;background:#fff8e8;border:1.5px solid #f0d9a0;
+  border-radius:12px;padding:14px;margin-bottom:14px;font-size:.92rem}
+.banner.verde{background:var(--verde-claro);border-color:#bfe3cf}
+.banner .b-ico{font-size:1.4rem}
+.banner button{background:var(--verde);color:#fff;font-weight:700;padding:9px 16px;
+  border-radius:9px;margin-top:8px;font-size:.9rem}
+
+/* ---------- Proposta ---------- */
+.prop{border-left:6px solid var(--borda)}
+.prop.votacao{border-left-color:var(--amarelo)}
+.prop.aprovada{border-left-color:var(--verde)}
+.prop.rejeitada{border-left-color:var(--vermelho)}
+.prop.executada{border-left-color:var(--azul)}
+.prop-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.chip{font-size:.74rem;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.chip.votacao{background:#fdf3dc;color:#8a6210}
+.chip.aprovada{background:var(--verde-claro);color:var(--verde-escuro)}
+.chip.rejeitada{background:#fbe9e6;color:#93392b}
+.chip.executada{background:#e7eefc;color:#1d4fc0}
+.chip.neutra{background:#eef1ef;color:var(--texto-suave)}
+.prop h3{font-size:1.05rem;margin:8px 0 4px}
+.prop .desc{font-size:.9rem;color:var(--texto-suave);margin-bottom:10px}
+.votos-barra{height:12px;border-radius:999px;background:#eef1ef;overflow:hidden;display:flex;margin:10px 0 6px}
+.votos-barra .vf{background:var(--verde)}
+.votos-barra .vc{background:var(--vermelho)}
+.votos-barra .va{background:#c9cfcb}
+.votos-legenda{display:flex;gap:14px;font-size:.78rem;color:var(--texto-suave);flex-wrap:wrap}
+.votos-legenda b{color:var(--texto)}
+.botoes-voto{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+.botoes-voto button{padding:14px 8px;border-radius:12px;font-weight:800;font-size:.95rem}
+.bt-favor{background:var(--verde);color:#fff}
+.bt-contra{background:var(--vermelho);color:#fff}
+.bt-abster{background:#eef1ef;color:var(--texto-suave)}
+.botoes-voto button:disabled{opacity:.45;cursor:not-allowed}
+.bt-executar{background:var(--azul);color:#fff;width:100%;padding:13px;border-radius:12px;
+  font-weight:800;margin-top:12px}
+.voto-ok{display:flex;align-items:center;gap:8px;margin-top:12px;background:var(--verde-claro);
+  color:var(--verde-escuro);font-weight:700;padding:11px 14px;border-radius:10px;font-size:.92rem}
+
+/* ---------- Abas nova proposta ---------- */
+.tipos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.tipos button{background:var(--card);border:2px solid var(--borda);border-radius:14px;
+  padding:16px 10px;text-align:center;font-size:.88rem;font-weight:600;color:var(--texto)}
+.tipos button .ico{display:block;font-size:1.6rem;margin-bottom:6px}
+.tipos button.sel{border-color:var(--verde);background:var(--verde-claro)}
+.form-prop{display:none}
+.form-prop.ativa{display:block}
+.bt-enviar{background:var(--verde);color:#fff;font-weight:800;font-size:1rem;width:100%;
+  padding:15px;border-radius:12px;margin-top:18px}
+.bt-enviar:disabled{opacity:.5}
+
+/* ---------- Categoria ---------- */
+.cat-linha{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--borda)}
+.cat-linha:last-child{border-bottom:none}
+.cat-cor{width:16px;height:16px;border-radius:5px;flex-shrink:0;border:1px solid rgba(0,0,0,.12)}
+.cat-nome{font-weight:600;flex:1}
+.cat-nome small{display:block;font-weight:400;color:var(--texto-suave);font-size:.78rem}
+.cat-cred{font-weight:800;color:var(--verde);font-size:.95rem;white-space:nowrap}
+.cat-cred small{font-weight:400;color:var(--texto-suave)}
+
+/* ---------- Avançado ---------- */
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;word-break:break-all}
+.end-linha{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--borda);font-size:.85rem}
+.end-linha:last-child{border-bottom:none}
+#logArea{background:#101713;color:#9fd8b4;border-radius:10px;padding:12px;max-height:260px;
+  overflow:auto;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;white-space:pre-wrap}
+.bt-sec{background:#eef1ef;color:var(--texto);font-weight:600;padding:10px 16px;border-radius:10px;font-size:.88rem;margin:4px 6px 4px 0}
+
+/* ---------- Lotes / Passaporte ---------- */
+.lote-status{display:flex;gap:4px;margin:12px 0 4px;flex-wrap:wrap}
+.etapa{flex:1;min-width:70px;text-align:center;font-size:.68rem;color:var(--texto-suave);
+  padding:7px 2px;border-radius:8px;background:#eef1ef;position:relative}
+.etapa.feita{background:var(--verde-claro);color:var(--verde-escuro);font-weight:700}
+.etapa.atual{background:var(--verde);color:#fff;font-weight:700}
+.timeline{margin-top:12px;border-left:3px solid var(--verde-claro);padding-left:14px}
+.tl-item{position:relative;padding-bottom:12px;font-size:.85rem}
+.tl-item::before{content:'';position:absolute;left:-20.5px;top:4px;width:10px;height:10px;
+  border-radius:50%;background:var(--verde);border:2px solid #fff}
+.tl-item .tl-quando{font-size:.74rem;color:var(--texto-suave)}
+.bt-etapa{background:var(--verde);color:#fff;font-weight:700;padding:12px 16px;
+  border-radius:10px;width:100%;margin-top:10px;font-size:.95rem}
+.bt-etapa:disabled{opacity:.5}
+.pdr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.85rem;margin-top:8px}
+.pdr-grid .rotulo{color:var(--texto-suave);font-size:.74rem}
+.credito-box{background:var(--verde-claro);border-radius:10px;padding:12px;margin-top:10px;
+  display:flex;justify-content:space-between;align-items:center}
+.credito-box b{color:var(--verde-escuro);font-size:1.05rem}
+
+/* ---------- Toast ---------- */
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);
+  background:#1d2b24;color:#fff;padding:13px 22px;border-radius:12px;font-size:.92rem;
+  opacity:0;pointer-events:none;transition:.3s;z-index:99;max-width:92vw;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:760px){#toast{bottom:30px}}
+.spinner{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);
+  border-top-color:#fff;border-radius:50%;animation:gira .7s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes gira{to{transform:rotate(360deg)}}
+.centro{text-align:center;color:var(--texto-suave);padding:26px 10px;font-size:.92rem}
+
+/* ---------- Chip de rede (cabeçalho) ---------- */
+.chip-rede{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);
+  color:#fff;font-size:.72rem;font-weight:600;padding:4px 11px;border-radius:999px;margin-top:6px;
+  border:1px solid rgba(255,255,255,.25)}
+.chip-rede .ponto{width:7px;height:7px;border-radius:50%;background:#f4b942}
+.chip-rede.publica .ponto{background:#7CFC9B}
+
+/* ---------- Filtros da assembleia ---------- */
+.filtros{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.f-chip{background:var(--card);border:1.5px solid var(--borda);color:var(--texto-suave);
+  font-weight:600;font-size:.85rem;padding:8px 16px;border-radius:999px}
+.f-chip.ativo{background:var(--verde);border-color:var(--verde);color:#fff}
+
+/* ---------- Prazo e quórum na proposta ---------- */
+.prazo{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;
+  color:#8a6210;background:#fdf3dc;padding:5px 12px;border-radius:999px;margin-top:8px}
+.quorum{margin-top:10px}
+.quorum .q-rotulo{display:flex;justify-content:space-between;font-size:.78rem;color:var(--texto-suave);margin-bottom:4px}
+.quorum .q-barra{height:8px;border-radius:999px;background:#eef1ef;overflow:hidden}
+.quorum .q-fill{height:100%;background:var(--azul);border-radius:999px;transition:width .4s}
+.quorum.ok .q-fill{background:var(--verde)}
+
+/* ---------- Esqueleto de carregamento ---------- */
+.skel{background:var(--card);border-radius:var(--raio);border:1px solid var(--borda);
+  padding:18px;margin-bottom:14px}
+.skel .s-linha{height:14px;border-radius:6px;margin-bottom:10px;
+  background:linear-gradient(90deg,#eef1ef 25%,#e2e8e4 50%,#eef1ef 75%);
+  background-size:200% 100%;animation:brilho 1.3s infinite}
+.skel .s-linha.curta{width:45%}
+.skel .s-linha.media{width:75%}
+@keyframes brilho{to{background-position:-200% 0}}
+
+/* ---------- Modal ---------- */
+.modal-fundo{position:fixed;inset:0;background:rgba(15,25,20,.55);z-index:120;
+  display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:560px){.modal-fundo{align-items:center;padding:20px}}
+.modal{background:var(--card);border-radius:20px 20px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+  width:100%;max-width:520px;max-height:88vh;overflow:auto;animation:surge .22s ease}
+@media(min-width:560px){.modal{border-radius:20px}}
+.modal h3{font-size:1.15rem;margin-bottom:4px}
+.modal .m-sub{font-size:.88rem;color:var(--texto-suave);margin-bottom:6px}
+.modal-botoes{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:20px}
+.modal-botoes .bt-sec{margin:0;text-align:center;padding:13px}
+
+/* ---------- Endereços e links ---------- */
+.bt-copiar{background:none;border:none;font-size:.95rem;padding:2px 6px;color:var(--texto-suave)}
+.bt-copiar:hover{color:var(--verde)}
+a.link-end{color:var(--azul);text-decoration:none;word-break:break-all}
+a.link-end:hover{text-decoration:underline}
+#toast a{color:#9fd8b4;font-weight:700}
+#logArea a{color:#7fc4ff}
+
+/* ---------- Acessibilidade ---------- */
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:3px solid var(--azul);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-row">
+    <div class="logo"><span class="folha">♻️</span>
+      <div>CircularDAO<small>Assembleia digital da reciclagem</small>
+        <span id="chipRede" class="chip-rede" title="Rede blockchain em uso"><span class="ponto"></span><span id="chipRedeTexto">conectando…</span></span>
+      </div>
+    </div>
+    <button id="btnEntrar" onclick="conectar()">Entrar</button>
+    <div id="chipUsuario"><span class="bolinha"></span><span id="chipTexto">…</span></div>
+  </div>
+</header>
+
+<nav aria-label="Navegação principal">
+  <button data-tela="inicio" class="ativo" onclick="irPara('inicio')"><span class="ico" aria-hidden="true">🏠</span>Início</button>
+  <button data-tela="assembleia" onclick="irPara('assembleia')"><span class="ico">🗳️</span>Assembleia</button>
+  <button data-tela="lotes" onclick="irPara('lotes')"><span class="ico">📦</span>Lotes</button>
+  <button data-tela="nova" onclick="irPara('nova')"><span class="ico">➕</span>Propor</button>
+  <button data-tela="transparencia" onclick="irPara('transparencia')"><span class="ico">📊</span>Transparência</button>
+  <button data-tela="avancado" onclick="irPara('avancado')"><span class="ico">⚙️</span>Avançado</button>
+</nav>
+
+<main>
+
+<!-- ============ INÍCIO ============ -->
+<section id="tela-inicio" class="tela ativa">
+  <h2 class="titulo">Bem-vindo(a) à cooperativa digital</h2>
+  <p class="sub">Aqui a comunidade decide junta as regras da reciclagem: novas categorias de
+  resíduo, valor dos créditos e quem pode validar coletas. Tudo registrado de forma
+  transparente e que ninguém pode apagar.</p>
+
+  <div id="bannerConexao" class="banner">
+    <span class="b-ico">👋</span>
+    <div>Para votar e criar propostas, toque em <b>Entrar</b> no topo da página.
+      Não precisa instalar nada.</div>
+  </div>
+
+  <div id="bannerDelegacao" class="banner" style="display:none">
+    <span class="b-ico">🔓</span>
+    <div>Você tem créditos de participação, mas seu <b>poder de voto ainda está desativado</b>.
+      <button onclick="ativarVoto()">Ativar meu poder de voto</button>
+    </div>
+  </div>
+
+  <div class="grid4">
+    <div class="card metrica"><div class="num" id="mPropostas">—</div><div class="rotulo">Propostas criadas</div></div>
+    <div class="card metrica"><div class="num" id="mCategorias">—</div><div class="rotulo">Categorias de resíduo</div></div>
+    <div class="card metrica"><div class="num" id="mCooperados">—</div><div class="rotulo">Participantes</div></div>
+    <div class="card metrica"><div class="num" id="mCreditos">—</div><div class="rotulo">Créditos emitidos</div></div>
+  </div>
+
+  <div class="card" id="cardMeuPainel" style="display:none">
+    <h3 style="margin-bottom:10px">🙋 Meu painel</h3>
+    <div class="grid2">
+      <div><div class="dica">Meu poder de voto</div><b id="meuVoto" style="font-size:1.2rem">—</b></div>
+      <div><div class="dica">Meus créditos (DAOG)</div><b id="meuSaldo" style="font-size:1.2rem">—</b></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:8px">Como funciona?</h3>
+    <div style="font-size:.92rem;color:var(--texto-suave)">
+      <p style="margin-bottom:8px">1️⃣ <b>Alguém propõe</b> uma mudança, por exemplo: "criar a categoria Vidro valendo 10 créditos por quilo".</p>
+      <p style="margin-bottom:8px">2️⃣ <b>Todos votam</b> na aba Assembleia: a favor, contra ou abstenção.</p>
+      <p>3️⃣ <b>Se aprovada, a regra entra em vigor</b> automaticamente e fica registrada para sempre no histórico público.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ASSEMBLEIA ============ -->
+<section id="tela-assembleia" class="tela">
+  <h2 class="titulo">🗳️ Assembleia</h2>
+  <p class="sub">Vote nas propostas da comunidade. Cada crédito de participação ativado vale um voto.</p>
+  <div class="filtros" role="group" aria-label="Filtrar propostas">
+    <button class="f-chip ativo" data-f="todas" onclick="filtrarPropostas('todas')">Todas</button>
+    <button class="f-chip" data-f="votacao" onclick="filtrarPropostas('votacao')">Em votação</button>
+    <button class="f-chip" data-f="encerradas" onclick="filtrarPropostas('encerradas')">Encerradas</button>
+  </div>
+  <div id="listaPropostas"></div>
+</section>
+
+<!-- ============ LOTES / PASSAPORTE DIGITAL ============ -->
+<section id="tela-lotes" class="tela">
+  <h2 class="titulo">📦 Lotes e Passaportes Digitais</h2>
+  <p class="sub">Cada lote de material recebe um Passaporte Digital (NFT): uma identidade única
+  que acompanha o resíduo da coleta até a reinserção, com histórico que ninguém pode alterar.</p>
+
+  <div class="card">
+    <button class="bt-sec" id="btToggleLote" onclick="toggleFormLote()">➕ Registrar novo lote</button>
+    <div id="formLote" style="display:none">
+      <label>Identificação do lote</label>
+      <input id="loteId" placeholder="Ex.: BATCH-2026-002">
+      <div class="dica">Código que identifica o lote no app de coleta ou na planilha da cooperativa.</div>
+      <label>Categoria do resíduo</label>
+      <select id="loteCategoria" onchange="atualizarPreviewLote()"><option>Carregando…</option></select>
+      <label>Peso (kg)</label>
+      <input id="lotePeso" type="number" min="1" placeholder="Ex.: 38" oninput="atualizarPreviewLote()">
+      <label>Composição / descrição</label>
+      <input id="loteComposicao" placeholder="Ex.: Computadores Dell OptiPlex, placas-mãe e fontes">
+      <label>Local de origem</label>
+      <input id="loteOrigem" placeholder="Ex.: Cooperativa Verde Esperança, São Paulo/SP">
+      <div class="credito-box" id="lotePreview" style="display:none">
+        <span>Créditos estimados ao reciclar</span><b id="lotePreviewValor">—</b>
+      </div>
+      <button class="bt-enviar" id="btLote" onclick="registrarLote()">Emitir Passaporte Digital (NFT)</button>
+    </div>
+  </div>
+
+  <div id="listaLotes"><div class="centro">Carregando lotes…</div></div>
+</section>
+
+<!-- ============ NOVA PROPOSTA ============ -->
+<section id="tela-nova" class="tela">
+  <h2 class="titulo">➕ Criar proposta</h2>
+  <p class="sub">Escolha o tipo de proposta. Ela ficará aberta para votação de toda a comunidade.</p>
+
+  <div class="tipos">
+    <button id="tp-cat" class="sel" onclick="tipoProposta('cat')"><span class="ico">🆕</span>Nova categoria de resíduo</button>
+    <button id="tp-cred" onclick="tipoProposta('cred')"><span class="ico">💰</span>Mudar valor de créditos</button>
+    <button id="tp-val" onclick="tipoProposta('val')"><span class="ico">🤝</span>Admitir validador</button>
+    <button id="tp-bonus" onclick="tipoProposta('bonus')"><span class="ico">🎁</span>Ajustar bônus</button>
+  </div>
+
+  <div class="card form-prop ativa" id="form-cat">
+    <label>Nome do resíduo</label>
+    <input id="catNome" placeholder="Ex.: Vidro">
+    <label>Código curto</label>
+    <input id="catCodigo" placeholder="Ex.: VID" maxlength="12" style="text-transform:uppercase">
+    <div class="dica">Uma sigla para identificar a categoria.</div>
+    <label>Cor de identificação</label>
+    <input id="catCor" type="color" value="#0e7a4a" style="height:48px;padding:4px">
+    <label>Créditos por quilo (kg)</label>
+    <input id="catCreditos" type="number" min="1" placeholder="Ex.: 10">
+    <div class="dica">Quantos créditos quem recicla 1 kg deste material deve receber.</div>
+    <label>Grau de perigo do material</label>
+    <select id="catPerigo">
+      <option value="0">Não perigoso (vidro, papel, plástico comum)</option>
+      <option value="1">Atenção (eletrônicos simples)</option>
+      <option value="2">Perigoso (pilhas, baterias)</option>
+      <option value="3">Muito perigoso (químicos, hospitalar)</option>
+    </select>
+    <label>Lei ou norma relacionada (opcional)</label>
+    <input id="catRegulacao" placeholder="Ex.: PNRS Lei 12.305/2010">
+    <label>Por que essa categoria é importante?</label>
+    <textarea id="catJustif" rows="3" placeholder="Explique para a comunidade o motivo da proposta"></textarea>
+    <button class="bt-enviar" id="btCat" onclick="enviarCategoria()">Enviar proposta para votação</button>
+  </div>
+
+  <div class="card form-prop" id="form-cred">
+    <label>Qual categoria?</label>
+    <select id="credCategoria"><option>Carregando…</option></select>
+    <label>Novo valor (créditos por kg)</label>
+    <input id="credValor" type="number" min="1" placeholder="Ex.: 30">
+    <label>Por que mudar?</label>
+    <textarea id="credJustif" rows="3" placeholder="Ex.: o preço do material subiu e o incentivo ficou baixo"></textarea>
+    <button class="bt-enviar" id="btCred" onclick="enviarCreditos()">Enviar proposta para votação</button>
+  </div>
+
+  <div class="card form-prop" id="form-val">
+    <label>Endereço da carteira do novo validador</label>
+    <input id="valEndereco" placeholder="0x…" class="mono">
+    <div class="dica">Validador é quem confere as coletas e confirma o peso dos materiais.</div>
+    <label>Nome ou identificação</label>
+    <input id="valNome" placeholder="Ex.: João da Balança, galpão central">
+    <label>Por que admitir?</label>
+    <textarea id="valJustif" rows="3" placeholder="Explique quem é e por que merece confiança"></textarea>
+    <button class="bt-enviar" id="btVal" onclick="enviarValidador()">Enviar proposta para votação</button>
+  </div>
+
+  <div class="card form-prop" id="form-bonus">
+    <label>Novo bônus de desempenho (%)</label>
+    <input id="bonusPct" type="number" min="0" max="100" step="0.5" placeholder="Ex.: 10">
+    <div class="dica">Percentual extra de créditos para cooperados que superam a meta.</div>
+    <label>Por que ajustar?</label>
+    <textarea id="bonusJustif" rows="3" placeholder="Explique o motivo do ajuste"></textarea>
+    <button class="bt-enviar" id="btBonus" onclick="enviarBonus()">Enviar proposta para votação</button>
+  </div>
+</section>
+
+<!-- ============ TRANSPARÊNCIA ============ -->
+<section id="tela-transparencia" class="tela">
+  <h2 class="titulo">📊 Transparência pública</h2>
+  <p class="sub">Qualquer pessoa, órgão público ou auditor pode conferir estes dados sem cadastro.
+  Tudo vem direto do registro digital (blockchain).</p>
+
+  <div class="grid4">
+    <div class="card metrica"><div class="num" id="tPropostas">—</div><div class="rotulo">Propostas</div></div>
+    <div class="card metrica"><div class="num" id="tExecutadas">—</div><div class="rotulo">Regras em vigor</div></div>
+    <div class="card metrica"><div class="num" id="tCooperados">—</div><div class="rotulo">Participantes</div></div>
+    <div class="card metrica"><div class="num" id="tCreditos">—</div><div class="rotulo">Créditos emitidos</div></div>
+    <div class="card metrica"><div class="num" id="tPassaportes">—</div><div class="rotulo">Passaportes emitidos</div></div>
+    <div class="card metrica"><div class="num" id="tPeso">—</div><div class="rotulo">Kg processados</div></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:6px">Categorias de resíduo e valores vigentes</h3>
+    <p class="dica" style="margin-bottom:8px">Valores aprovados pela comunidade em assembleia.</p>
+    <div id="listaCategorias"><div class="centro">Carregando…</div></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:6px">Histórico de decisões</h3>
+    <div id="historicoPropostas"><div class="centro">Carregando…</div></div>
+  </div>
+</section>
+
+<!-- ============ AVANÇADO ============ -->
+<section id="tela-avancado" class="tela">
+  <h2 class="titulo">⚙️ Modo avançado</h2>
+  <p class="sub">Informações técnicas para desenvolvedores e auditores.</p>
+
+  <div class="card">
+    <h3 style="margin-bottom:8px">Conexão</h3>
+    <div class="end-linha"><span>Rede</span><b id="avRede">—</b></div>
+    <div class="end-linha"><span>RPC</span><span class="mono" id="avRpc">—</span></div>
+    <div class="end-linha"><span>Carteira</span><span class="mono" id="avCarteira">—</span></div>
+    <div class="end-linha"><span>Delegação</span><span class="mono" id="avDelegacao">—</span></div>
+    <div style="margin-top:12px">
+      <button class="bt-sec" onclick="atualizarTudo()">↻ Atualizar dados</button>
+      <button class="bt-sec" onclick="ativarVoto()">⇄ Delegar votos para mim</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:8px">Contratos implantados</h3>
+    <div id="listaContratos" class="mono">—</div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:8px">Log operacional</h3>
+    <div id="logArea">Interface inicializada.</div>
+    <button class="bt-sec" style="margin-top:10px" onclick="limparLog()">Limpar log</button>
+  </div>
+</section>
+
+</main>
+
+<div id="modalFundo" class="modal-fundo" style="display:none" onclick="if(event.target===this)fecharModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <h3 id="modalTitulo"></h3>
+    <p class="m-sub" id="modalSub"></p>
+    <div id="modalCampos"></div>
+    <div class="modal-botoes">
+      <button class="bt-sec" onclick="fecharModal()">Cancelar</button>
+      <button class="bt-etapa" id="modalOk" style="margin-top:0">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================== ESTADO GLOBAL ================== */
+const S = {
+  cfg:null, rpcUrl:null, ro:null,            // provider somente leitura
+  signer:null, endereco:null, modoDemo:false,
+  dao:null, daoW:null, gov:null, govW:null, catReg:null, stak:null, rew:null,
+  pass:null, track:null, cred:null,
+  decimais:18, credDec:2, simbolo:'DAOG', categorias:[], propostasCache:[]
+};
+const ERC20VOTES_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+  "function totalSupply() view returns (uint256)",
+  "function delegate(address)",
+  "function delegates(address) view returns (address)",
+  "function getVotes(address) view returns (uint256)"
+];
+const ESTADOS = {
+  0:{t:'Aguardando início',c:'neutra',cls:''},
+  1:{t:'Em votação',c:'votacao',cls:'votacao'},
+  2:{t:'Cancelada',c:'neutra',cls:''},
+  3:{t:'Rejeitada',c:'rejeitada',cls:'rejeitada'},
+  4:{t:'Aprovada — aguardando execução',c:'aprovada',cls:'aprovada'},
+  5:{t:'Na fila para execução',c:'aprovada',cls:'aprovada'},
+  6:{t:'Expirada',c:'neutra',cls:''},
+  7:{t:'Executada ✓',c:'executada',cls:'executada'}
+};
+
+/* ================== UTILIDADES ================== */
+function $(id){return document.getElementById(id)}
+function toast(msg,ms=3500){const t=$('toast');t.innerHTML=msg;t.classList.add('show');
+  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),ms)}
+function log(msg,html){const a=$('logArea');const h=new Date().toLocaleTimeString('pt-BR');
+  a.insertAdjacentHTML('beforeend','\n['+h+'] '+esc(msg)+(html||''));a.scrollTop=a.scrollHeight}
+function logTx(msg,hash){
+  const ex=explorer();
+  log(msg+' TX: '+hash, ex?` <a href="${ex}/tx/${hash}" target="_blank" rel="noopener">↗</a>`:'');
+}
+function limparLog(){$('logArea').textContent='Log limpo.'}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function curto(a){return a?a.slice(0,6)+'…'+a.slice(-4):'—'}
+function fmt(n){return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(n)}
+function fmtVotos(v){try{return fmt(Number(ethers.formatUnits(v,S.decimais)))}catch(e){return String(v)}}
+function fmtCred(v){try{return fmt(Number(ethers.formatUnits(v,S.credDec)))}catch(e){return String(v)}}
+function explorer(){return (S.cfg&&S.cfg.explorerUrl)?String(S.cfg.explorerUrl).replace(/\/$/,''):''}
+function linkTx(hash){
+  const ex=explorer();
+  return ex?` <a href="${ex}/tx/${hash}" target="_blank" rel="noopener">ver comprovante ↗</a>`:'';
+}
+function linkEnd(addr){
+  const ex=explorer();
+  return ex?`<a class="link-end" href="${ex}/address/${addr}" target="_blank" rel="noopener">${esc(addr)}</a>`
+           :`<span class="mono">${esc(addr)}</span>`;
+}
+async function copiar(texto,btn){
+  try{await navigator.clipboard.writeText(texto);
+    const t=btn.textContent;btn.textContent='✓';setTimeout(()=>btn.textContent=t,1200);
+    toast('📋 Endereço copiado.');
+  }catch(e){toast('Não consegui copiar. Selecione e copie manualmente.')}
+}
+function skel(n=3){
+  return Array.from({length:n},()=>`<div class="skel" aria-hidden="true">
+    <div class="s-linha curta"></div><div class="s-linha media"></div><div class="s-linha"></div>
+  </div>`).join('');
+}
+// Converte blocos restantes em tempo aproximado legível
+function tempoBlocos(blocos){
+  if(Number(S.cfg?.chainId)===31337)return blocos+' bloco'+(blocos===1?'':'s');
+  const seg=blocos*12; // ~12 s por bloco nas redes Ethereum públicas
+  if(seg<90)return '~'+seg+' segundos';
+  if(seg<5400)return '~'+Math.round(seg/60)+' minutos';
+  if(seg<172800)return '~'+Math.round(seg/3600)+' horas';
+  return '~'+Math.round(seg/86400)+' dias';
+}
+function erroAmigavel(e){
+  const m=(e&&(e.shortMessage||e.reason||e.message))||'erro desconhecido';
+  if(/user rejected|denied/i.test(m))return 'Você cancelou a operação.';
+  if(/GovernorInsufficientProposerVotes/i.test(m))return 'Você ainda não tem votos suficientes para criar propostas. Ative seu poder de voto primeiro.';
+  if(/GovernorAlreadyCastVote/i.test(m))return 'Você já votou nesta proposta.';
+  if(/GovernorUnexpectedProposalState/i.test(m))return 'Esta proposta não está mais nesta fase.';
+  if(/AccessControlUnauthorizedAccount/i.test(m))return 'Sua conta não tem permissão para esta ação. Peça ao administrador da cooperativa o papel adequado (coletor, reciclador ou operador).';
+  if(/network|fetch|timeout|connection/i.test(m))return 'Falha de conexão com o servidor. Tente novamente.';
+  return m.length>140?m.slice(0,140)+'…':m;
+}
+
+/* ================== NAVEGAÇÃO ================== */
+function irPara(tela){
+  document.querySelectorAll('.tela').forEach(s=>s.classList.remove('ativa'));
+  $('tela-'+tela).classList.add('ativa');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('ativo',b.dataset.tela===tela));
+  if(tela==='assembleia')carregarPropostas();
+  if(tela==='transparencia')carregarTransparencia();
+  if(tela==='lotes'){carregarLotes();preencherSelectLoteCategorias();}
+  window.scrollTo({top:0});
+}
+function tipoProposta(t){
+  ['cat','cred','val','bonus'].forEach(k=>{
+    $('tp-'+k).classList.toggle('sel',k===t);
+    $('form-'+k).classList.toggle('ativa',k===t);
+  });
+  if(t==='cred')preencherSelectCategorias();
+}
+
+/* ================== CONEXÃO ================== */
+async function detectarRpc(cfg){
+  const cands=['/eth-rpc',cfg.rpcUrl].filter(Boolean);
+  for(const u of cands){
+    try{
+      const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_chainId',params:[]})});
+      if(r.ok){
+        const j=await r.json();
+        // só aceita o endpoint se ele responder NA REDE configurada (evita conectar na rede errada)
+        if(j&&j.result&&parseInt(j.result,16)===Number(cfg.chainId)){log('RPC detectado: '+u);return u;}
+      }
+    }catch(e){}
+  }
+  return cfg.rpcUrl;
+}
+
+async function iniciar(){
+  try{
+    const r=await fetch('contracts.json',{cache:'no-store'});
+    S.cfg=await r.json();
+    S.rpcUrl=await detectarRpc(S.cfg);
+    if(S.rpcUrl&&S.rpcUrl.startsWith('/'))S.rpcUrl=location.origin+S.rpcUrl; // ethers exige URL absoluta
+    S.ro=new ethers.JsonRpcProvider(S.rpcUrl,undefined,{staticNetwork:true});
+    const A=S.cfg.addresses, B=S.cfg.abi;
+    S.dao   =new ethers.Contract(A.dao,B.dao,S.ro);
+    S.gov   =new ethers.Contract(A.governanceToken,ERC20VOTES_ABI,S.ro);
+    S.catReg=new ethers.Contract(A.categoryRegistry,B.categoryRegistry,S.ro);
+    S.stak  =new ethers.Contract(A.stakeholders,B.stakeholders,S.ro);
+    S.rew   =new ethers.Contract(A.rewards,B.rewards,S.ro);
+    if(B.passport&&A.passport)S.pass=new ethers.Contract(A.passport,B.passport,S.ro);
+    if(B.tracker&&A.tracker)S.track=new ethers.Contract(A.tracker,B.tracker,S.ro);
+    if(B.credit&&A.credit){S.cred=new ethers.Contract(A.credit,B.credit,S.ro);
+      try{S.credDec=Number(await S.cred.decimals())}catch(e){}}
+    try{S.decimais=Number(await S.gov.decimals())}catch(e){}
+    try{S.simbolo=await S.gov.symbol()}catch(e){}
+    $('avRede').textContent=(S.cfg.chainName||'?')+' (chainId '+(S.cfg.chainId||'?')+')';
+    $('avRpc').textContent=S.rpcUrl;
+    const local=Number(S.cfg.chainId)===31337;
+    $('chipRedeTexto').textContent=local?'Ambiente de teste':(S.cfg.chainName||'Rede pública');
+    $('chipRede').classList.toggle('publica',!local);
+    $('listaContratos').innerHTML=Object.entries(A).map(([k,v])=>
+      `<div class="end-linha"><span>${esc(k)}</span>
+        <span>${linkEnd(v)}<button class="bt-copiar" title="Copiar endereço" aria-label="Copiar endereço de ${esc(k)}" onclick="copiar('${esc(v)}',this)">⧉</button></span>
+      </div>`).join('');
+    log('Configuração carregada. '+Object.keys(A).length+' contratos.');
+    carregarMetricas();
+  }catch(e){
+    log('ERRO ao iniciar: '+(e.message||e));
+    toast('⚠️ Não consegui carregar a configuração (contracts.json).',6000);
+  }
+}
+
+async function conectar(){
+  try{
+    $('btnEntrar').innerHTML='<span class="spinner"></span>Conectando…';
+    let signer=null;
+    if(window.ethereum){
+      const bp=new ethers.BrowserProvider(window.ethereum);
+      await bp.send('eth_requestAccounts',[]);
+      try{
+        const net=await bp.getNetwork();
+        if(Number(net.chainId)!==Number(S.cfg.chainId)){
+          await bp.send('wallet_addEthereumChain',[{
+            chainId:'0x'+Number(S.cfg.chainId).toString(16),
+            chainName:S.cfg.chainName||'Rede CircularDAO',
+            rpcUrls:[S.rpcUrl.startsWith('http')?S.rpcUrl:location.origin+S.rpcUrl],
+            nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18}
+          }]).catch(()=>{});
+        }
+      }catch(e){}
+      signer=await bp.getSigner();
+      S.modoDemo=false;
+    }else if(Number(S.cfg.chainId)===31337){
+      // Modo demonstração: usa conta destravada do nó (apenas ambiente de teste local)
+      signer=await S.ro.getSigner(0);
+      S.modoDemo=true;
+    }else{
+      throw new Error('Esta é a rede pública. Para votar e criar propostas, acesse por um navegador com a carteira MetaMask instalada. A consulta dos dados (Transparência, Lotes e Assembleia) funciona sem conexão.');
+    }
+    S.signer=signer;
+    S.endereco=await signer.getAddress();
+    S.daoW=S.dao.connect(signer);
+    S.govW=S.gov.connect(signer);
+    $('btnEntrar').style.display='none';
+    $('chipUsuario').style.display='flex';
+    $('chipTexto').textContent=(S.modoDemo?'Demo · ':'')+curto(S.endereco);
+    $('bannerConexao').style.display='none';
+    $('cardMeuPainel').style.display='block';
+    $('avCarteira').textContent=S.endereco+(S.modoDemo?' (modo demonstração)':'');
+    log('Conectado: '+S.endereco+(S.modoDemo?' [demo]':' [carteira própria]'));
+    toast('✅ Conectado! Bem-vindo(a) à assembleia.');
+    atualizarMeuPainel();
+  }catch(e){
+    $('btnEntrar').innerHTML='Entrar';
+    log('Falha na conexão: '+(e.message||e));
+    toast('⚠️ '+erroAmigavel(e),5000);
+  }
+}
+
+async function atualizarMeuPainel(){
+  if(!S.endereco)return;
+  try{
+    const [saldo,votos,deleg]=await Promise.all([
+      S.gov.balanceOf(S.endereco),S.gov.getVotes(S.endereco),S.gov.delegates(S.endereco)
+    ]);
+    $('meuSaldo').textContent=fmtVotos(saldo)+' '+S.simbolo;
+    $('meuVoto').textContent=fmtVotos(votos)+' votos';
+    $('avDelegacao').textContent=deleg===ethers.ZeroAddress?'Nenhuma':deleg;
+    const semVoto = votos===0n && saldo>0n;
+    $('bannerDelegacao').style.display=semVoto?'flex':'none';
+  }catch(e){log('Erro ao ler painel: '+erroAmigavel(e))}
+}
+
+async function ativarVoto(){
+  if(!S.govW){toast('Primeiro toque em Entrar, no topo.');return}
+  try{
+    toast('<span class="spinner"></span>Ativando seu poder de voto…',8000);
+    const tx=await S.govW.delegate(S.endereco);
+    await tx.wait();
+    logTx('Delegação para si mesmo.',tx.hash);
+    toast('✅ Poder de voto ativado!');
+    atualizarMeuPainel();
+  }catch(e){toast('⚠️ '+erroAmigavel(e),5000);log('Erro delegação: '+erroAmigavel(e))}
+}
+
+/* ================== MÉTRICAS ================== */
+async function carregarMetricas(){
+  try{
+    const [tp,ts]=await Promise.all([
+      S.dao.totalProposals().catch(()=>null),
+      S.stak.totalStakeholders().catch(()=>null)
+    ]);
+    try{await carregarCategorias()}catch(e){}
+    let cred=null;try{cred=await S.rew.totalCreditsMinted()}catch(e){}
+    if(tp!==null){$('mPropostas').textContent=fmt(Number(tp));$('tPropostas').textContent=fmt(Number(tp))}
+    if(ts!==null){$('mCooperados').textContent=fmt(Number(ts));$('tCooperados').textContent=fmt(Number(ts))}
+    $('mCategorias').textContent=fmt(S.categorias.length);
+    if(cred!==null){
+      const v=fmtCred(cred);$('mCreditos').textContent=v;$('tCreditos').textContent=v;
+    }
+    if(S.pass){try{$('tPassaportes').textContent=fmt(Number(await S.pass.totalPassports()))}catch(e){}}
+    if(S.track){try{$('tPeso').textContent=fmt(Number(await S.track.totalWeightProcessed()))}catch(e){}}
+  }catch(e){log('Erro métricas: '+erroAmigavel(e))}
+}
+
+/* ================== PROPOSTAS ================== */
+function lerMeta(meta){
+  // Extrai título/descrição/tipo de forma tolerante a diferentes formatos de struct
+  let titulo='',desc='',tipo=null,proponente='';
+  try{
+    const vals=Array.isArray(meta)?meta:Object.values(meta);
+    for(const v of vals){
+      if(typeof v==='string'&&v.startsWith('0x')&&v.length===42){proponente=proponente||v;continue}
+      if(typeof v==='string'&&v.trim()){ if(!titulo)titulo=v; else if(!desc)desc=v; continue}
+      if(typeof v==='bigint'&&v<10n&&tipo===null){tipo=Number(v)}
+    }
+    if(meta.title)titulo=meta.title;
+    if(meta.description)desc=meta.description;
+    if(meta.proposer)proponente=meta.proposer;
+    if(meta.pType!==undefined)tipo=Number(meta.pType);
+  }catch(e){}
+  return {titulo,desc,tipo,proponente};
+}
+const TIPO_ICONE={1:'🆕',2:'💰',3:'🤝',4:'🎁'}; // enum do contrato começa em 1
+
+async function carregarPropostas(){
+  const alvo=$('listaPropostas');
+  alvo.innerHTML=skel(3);
+  try{
+    const total=Number(await S.dao.totalProposals());
+    if(!total){
+      S.propostasCache=[];
+      alvo.innerHTML='<div class="centro">Nenhuma proposta ainda. Seja a primeira pessoa a propor! 🌱</div>';
+      return;
+    }
+    S.clockAtual=Number(await S.dao.clock().catch(()=>0));
+    const n=Math.min(total,30);
+    const ids=(await Promise.all(
+      Array.from({length:n},(_,k)=>S.dao.allProposalIds(total-1-k).catch(()=>null))
+    )).filter(x=>x!==null);
+    S.propostasCache=await Promise.all(ids.map(montarCardProposta));
+    renderPropostas();
+  }catch(e){
+    alvo.innerHTML='<div class="centro">⚠️ Não consegui carregar as propostas.<br>'+esc(erroAmigavel(e))+'</div>';
+    log('Erro propostas: '+erroAmigavel(e));
+  }
+}
+
+function filtrarPropostas(f){
+  S.filtro=f;
+  document.querySelectorAll('.f-chip').forEach(b=>b.classList.toggle('ativo',b.dataset.f===f));
+  renderPropostas();
+}
+function renderPropostas(){
+  const alvo=$('listaPropostas');
+  const f=S.filtro||'todas';
+  const vis=S.propostasCache.filter(p=>
+    f==='todas'||(f==='votacao'?p.st<=1:p.st>=2));
+  alvo.innerHTML=vis.map(p=>p.html).join('')||
+    '<div class="centro">Nenhuma proposta '+(f==='votacao'?'em votação':f==='encerradas'?'encerrada':'')+' no momento.</div>';
+}
+
+async function montarCardProposta(id){
+  try{
+    const [st,votos,meta]=await Promise.all([
+      S.dao.state(id),
+      S.dao.proposalVotes(id),
+      S.dao.getProposalMeta(id).catch(()=>({}))
+    ]);
+    let jaVotei=false;
+    if(S.endereco){try{jaVotei=await S.dao.hasVoted(id,S.endereco)}catch(e){}}
+    const e2=ESTADOS[Number(st)]||{t:'?',c:'neutra',cls:''};
+    const m=lerMeta(meta);
+    const contra=votos[0]??0n, favor=votos[1]??0n, abst=votos[2]??0n;
+    const tot=contra+favor+abst;
+    const pf=tot>0n?Number(favor*100n/tot):0, pc=tot>0n?Number(contra*100n/tot):0;
+    const pa=tot>0n?100-pf-pc:0;
+    const idStr=id.toString();
+    const titulo=m.titulo||('Proposta '+idStr.slice(0,10)+'…');
+    const icone=TIPO_ICONE[m.tipo]??'📋';
+
+    // Prazo da votação (blocos restantes até proposalDeadline)
+    let prazoHtml='';
+    if(Number(st)<=1&&S.clockAtual){
+      try{
+        const rest=Number(await S.dao.proposalDeadline(id))-S.clockAtual;
+        if(rest>0)prazoHtml=`<span class="prazo">⏳ Votação termina em ${tempoBlocos(rest)}</span>`;
+      }catch(e){}
+    }
+    // Quórum (na contagem do Governor, votos a favor + abstenções contam para o quórum)
+    let quorumHtml='';
+    try{
+      const snap=Number(await S.dao.proposalSnapshot(id));
+      if(snap>0&&S.clockAtual&&snap<S.clockAtual){
+        const q=await S.dao.quorum(snap);
+        if(q>0n){
+          const part=favor+abst;
+          const pct=part>=q?100:Number(part*100n/q);
+          quorumHtml=`<div class="quorum ${part>=q?'ok':''}">
+            <div class="q-rotulo"><span>Quórum ${part>=q?'atingido ✓':'mínimo para valer'}</span>
+              <span>${fmtVotos(part)} / ${fmtVotos(q)} votos</span></div>
+            <div class="q-barra"><div class="q-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        }
+      }
+    }catch(e){}
+
+    let acoes='';
+    if(Number(st)===1){
+      if(jaVotei){
+        acoes=`<div class="voto-ok">✅ Seu voto já foi registrado nesta proposta.</div>`;
+      }else if(S.endereco){
+        acoes=`<div class="botoes-voto">
+          <button class="bt-favor" onclick="votar('${idStr}',1,this)">👍 A favor</button>
+          <button class="bt-contra" onclick="votar('${idStr}',0,this)">👎 Contra</button>
+          <button class="bt-abster" onclick="votar('${idStr}',2,this)">Abster</button>
+        </div>`;
+      }else{
+        acoes=`<div class="dica" style="margin-top:10px">Toque em <b>Entrar</b> (no topo) para votar.</div>`;
+      }
+    }else if(Number(st)===4&&S.endereco){
+      acoes=`<button class="bt-executar" onclick="executar('${idStr}',this)">▶️ Colocar regra em vigor</button>`;
+    }
+    const propon=m.proponente
+      ?(explorer()
+        ?`<div class="dica" style="margin-top:8px">Proposta por <a class="link-end" href="${explorer()}/address/${m.proponente}" target="_blank" rel="noopener">${curto(m.proponente)}</a></div>`
+        :`<div class="dica" style="margin-top:8px">Proposta por ${curto(m.proponente)}</div>`)
+      :'';
+    const html=`<div class="card prop ${e2.cls}">
+      <div class="prop-topo">
+        <span style="font-size:1.3rem" aria-hidden="true">${icone}</span>
+        <span class="chip ${e2.c}">${e2.t}</span>
+      </div>
+      <h3>${esc(titulo)}</h3>
+      ${m.desc?`<div class="desc">${esc(m.desc)}</div>`:''}
+      ${prazoHtml}
+      <div class="votos-barra">
+        <div class="vf" style="width:${pf}%"></div>
+        <div class="vc" style="width:${pc}%"></div>
+        <div class="va" style="width:${pa}%"></div>
+      </div>
+      <div class="votos-legenda">
+        <span>👍 A favor: <b>${fmtVotos(favor)}</b></span>
+        <span>👎 Contra: <b>${fmtVotos(contra)}</b></span>
+        <span>Abstenções: <b>${fmtVotos(abst)}</b></span>
+      </div>
+      ${quorumHtml}
+      ${propon}
+      ${acoes}
+    </div>`;
+    return {st:Number(st),html};
+  }catch(e){
+    return {st:-1,html:`<div class="card prop"><div class="dica">⚠️ Erro ao ler proposta: ${esc(erroAmigavel(e))}</div></div>`};
+  }
+}
+
+async function votar(id,opcao,btn){
+  if(!S.daoW){toast('Primeiro toque em Entrar, no topo.');return}
+  const rotulos={1:'A FAVOR',0:'CONTRA',2:'ABSTENÇÃO'};
+  try{
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando…';
+    const tx=await S.daoW.castVote(id,opcao);
+    toast('<span class="spinner"></span>Registrando seu voto…',15000);
+    await tx.wait();
+    logTx(`Voto ${rotulos[opcao]} na proposta ${id}.`,tx.hash);
+    toast('✅ Voto registrado com sucesso!'+linkTx(tx.hash),6000);
+    carregarPropostas();
+  }catch(e){
+    btn.disabled=false;btn.textContent='Tentar de novo';
+    toast('⚠️ '+erroAmigavel(e),5000);log('Erro voto: '+erroAmigavel(e));
+  }
+}
+
+async function executar(id,btn){
+  try{
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Executando…';
+    // Busca os dados originais da proposta no evento ProposalCreated
+    const evs=await S.dao.queryFilter(S.dao.filters.ProposalCreated(),0);
+    const ev=evs.find(x=>x.args&&x.args[0].toString()===id.toString());
+    if(!ev)throw new Error('Dados da proposta não encontrados no histórico.');
+    const a=ev.args;
+    const targets=[...a[2]], values=[...a[3]].map(v=>v), calldatas=[...a[5]];
+    const descHash=ethers.keccak256(ethers.toUtf8Bytes(a[8]));
+    const tx=await S.daoW.execute(targets,values,calldatas,descHash);
+    toast('<span class="spinner"></span>Colocando a regra em vigor…',15000);
+    await tx.wait();
+    logTx('Proposta '+id+' executada.',tx.hash);
+    toast('✅ Regra em vigor! A decisão da assembleia foi aplicada.'+linkTx(tx.hash),6000);
+    carregarPropostas();carregarMetricas();
+  }catch(e){
+    btn.disabled=false;btn.textContent='▶️ Colocar regra em vigor';
+    toast('⚠️ '+erroAmigavel(e),5000);log('Erro execução: '+erroAmigavel(e));
+  }
+}
+
+/* ================== CRIAÇÃO DE PROPOSTAS ================== */
+function precisaConexao(){
+  if(!S.daoW){toast('Primeiro toque em Entrar, no topo da página.');irPara('inicio');return true}
+  return false;
+}
+async function enviarTx(btn,fn,okMsg){
+  const original=btn.textContent;
+  try{
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Enviando…';
+    const tx=await fn();
+    toast('<span class="spinner"></span>Registrando proposta…',15000);
+    await tx.wait();
+    logTx('Proposta criada.',tx.hash);
+    toast('✅ '+okMsg+linkTx(tx.hash),6000);
+    btn.disabled=false;btn.textContent=original;
+    irPara('assembleia');
+  }catch(e){
+    btn.disabled=false;btn.textContent=original;
+    toast('⚠️ '+erroAmigavel(e),6000);log('Erro proposta: '+erroAmigavel(e));
+  }
+}
+function enviarCategoria(){
+  if(precisaConexao())return;
+  const nome=$('catNome').value.trim(), cod=$('catCodigo').value.trim().toUpperCase();
+  const cor=$('catCor').value, cred=$('catCreditos').value;
+  const per=Number($('catPerigo').value), reg=$('catRegulacao').value.trim();
+  const just=$('catJustif').value.trim();
+  if(!nome||!cod||!cred){toast('Preencha nome, código e créditos por kg.');return}
+  const titulo=`Criar categoria "${nome}" valendo ${cred} créditos/kg`;
+  enviarTx($('btCat'),
+    ()=>S.daoW.proposeAddCategory(nome,cod,cor,BigInt(cred),per,reg,titulo,just||titulo),
+    'Proposta enviada! Agora a comunidade vota.');
+}
+function enviarCreditos(){
+  if(precisaConexao())return;
+  const sel=$('credCategoria');
+  const catId=sel.value, valor=$('credValor').value, just=$('credJustif').value.trim();
+  if(!catId||catId==='x'||!valor){toast('Escolha a categoria e o novo valor.');return}
+  const nomeCat=sel.options[sel.selectedIndex].dataset.nome||('categoria '+catId);
+  const titulo=`Mudar valor de "${nomeCat}" para ${valor} créditos/kg`;
+  enviarTx($('btCred'),
+    ()=>S.daoW.proposeUpdateCreditWeight(BigInt(catId),BigInt(valor),titulo,just||titulo),
+    'Proposta enviada! Agora a comunidade vota.');
+}
+function enviarValidador(){
+  if(precisaConexao())return;
+  const end=$('valEndereco').value.trim(), nome=$('valNome').value.trim(), just=$('valJustif').value.trim();
+  if(!ethers.isAddress(end)){toast('Endereço de carteira inválido. Confira o 0x…');return}
+  const titulo=`Admitir validador: ${nome||curto(end)}`;
+  enviarTx($('btVal'),
+    ()=>S.daoW.proposeAdmitValidator(end,titulo,just||titulo),
+    'Proposta enviada! Agora a comunidade vota.');
+}
+function enviarBonus(){
+  if(precisaConexao())return;
+  const pct=$('bonusPct').value, just=$('bonusJustif').value.trim();
+  if(pct===''){toast('Informe o novo percentual de bônus.');return}
+  const bp=Math.round(Number(pct)*100); // % -> basis points
+  const titulo=`Ajustar bônus de desempenho para ${pct}%`;
+  enviarTx($('btBonus'),
+    ()=>S.daoW.proposeUpdateBonus(BigInt(bp),titulo,just||titulo),
+    'Proposta enviada! Agora a comunidade vota.');
+}
+
+/* ================== CATEGORIAS / TRANSPARÊNCIA ================== */
+async function carregarCategorias(){
+  // getAllCategories() retorna apenas os IDs; a struct vem de getCategory(id)
+  const ids=await S.catReg.getAllCategories();
+  S.categorias=await Promise.all([...ids].map(i=>S.catReg.getCategory(i)));
+  return S.categorias;
+}
+const CORES_NOMEADAS={verde:'#0e7a4a',azul:'#2563eb',vermelho:'#c94f3d',amarelo:'#f4b942',
+  laranja:'#ee7b30',marrom:'#8b5e3c',cinza:'#9aa39d',roxo:'#7c3aed',preto:'#222',branco:'#ddd'};
+function corCss(c){if(!c)return '#9aa39d';const s=String(c).toLowerCase().trim();
+  return s.startsWith('#')?s:(CORES_NOMEADAS[s]||'#9aa39d')}
+function lerCategoria(c){
+  // tolera struct nomeada ou posicional: id,name,code,color,creditsPerKg,hazard,...
+  const g=(k,i)=>c[k]!==undefined?c[k]:c[i];
+  return {
+    id:g('id',0), nome:g('name',1), codigo:g('code',2), cor:g('color',3),
+    creditos:g('creditsPerKg',4), perigo:g('hazard',5), ativa:g('active',6)
+  };
+}
+const PERIGO_TXT={0:'Não perigoso',1:'Atenção',2:'Perigoso',3:'Muito perigoso'};
+
+async function preencherSelectCategorias(){
+  const sel=$('credCategoria');
+  try{
+    if(!S.categorias.length)await carregarCategorias();
+    if(!S.categorias.length){sel.innerHTML='<option value="x">Nenhuma categoria cadastrada ainda</option>';return}
+    sel.innerHTML=S.categorias.map(c=>{
+      const k=lerCategoria(c);
+      return `<option value="${k.id}" data-nome="${esc(k.nome)}">${esc(k.nome)} (hoje: ${k.creditos} créditos/kg)</option>`;
+    }).join('');
+  }catch(e){sel.innerHTML='<option value="x">Erro ao carregar categorias</option>'}
+}
+
+async function carregarTransparencia(){
+  carregarMetricas();
+  // Categorias
+  const lc=$('listaCategorias');
+  try{
+    await carregarCategorias();
+    if(!S.categorias.length){lc.innerHTML='<div class="centro">Nenhuma categoria cadastrada ainda.</div>'}
+    else{
+      lc.innerHTML=S.categorias.map(c=>{
+        const k=lerCategoria(c);
+        return `<div class="cat-linha">
+          <span class="cat-cor" style="background:${corCss(k.cor)}"></span>
+          <span class="cat-nome">${esc(k.nome)}<small>${esc(k.codigo||'')} · ${PERIGO_TXT[Number(k.perigo)]??''}</small></span>
+          <span class="cat-cred">${k.creditos} <small>créditos/kg</small></span>
+        </div>`;
+      }).join('');
+    }
+  }catch(e){lc.innerHTML='<div class="centro">⚠️ '+esc(erroAmigavel(e))+'</div>'}
+  // Histórico
+  const hp=$('historicoPropostas');
+  try{
+    const total=Number(await S.dao.totalProposals());
+    if(!total){hp.innerHTML='<div class="centro">Nenhuma decisão registrada ainda.</div>';$('tExecutadas').textContent='0';return}
+    let execs=0;const linhas=[];
+    for(let i=total-1;i>=0&&linhas.length<20;i--){
+      try{
+        const id=await S.dao.allProposalIds(i);
+        const [st,meta]=await Promise.all([S.dao.state(id),S.dao.getProposalMeta(id).catch(()=>({}))]);
+        const e2=ESTADOS[Number(st)]||{t:'?',c:'neutra'};
+        if(Number(st)===7)execs++;
+        const m=lerMeta(meta);
+        linhas.push(`<div class="cat-linha">
+          <span class="cat-nome">${esc(m.titulo||'Proposta '+id.toString().slice(0,10)+'…')}</span>
+          <span class="chip ${e2.c}">${e2.t}</span>
+        </div>`);
+      }catch(e){break}
+    }
+    $('tExecutadas').textContent=fmt(execs);
+    hp.innerHTML=linhas.join('')||'<div class="centro">Sem registros.</div>';
+  }catch(e){hp.innerHTML='<div class="centro">⚠️ '+esc(erroAmigavel(e))+'</div>'}
+}
+
+/* ================== LOTES / PASSAPORTE DIGITAL ================== */
+// Etapas do ciclo de vida (enum MaterialStatus do contrato)
+const ETAPAS=[
+  {n:'Registrado',  ico:'📝'},
+  {n:'Coletado',    ico:'🚛'},
+  {n:'Em trânsito', ico:'🚚'},
+  {n:'Triado',      ico:'🔍'},
+  {n:'Processando', ico:'⚙️'},
+  {n:'Reciclado',   ico:'♻️'},
+  {n:'Reinserido',  ico:'🔄'}
+];
+// Próxima ação do tracker para cada status atual
+const PROXIMA_ACAO={
+  0:{rotulo:'🚛 Registrar coleta',fn:'registerCollection',pedeLocal:true},
+  1:{rotulo:'🔍 Registrar triagem',fn:'registerTriagem',pedeLocal:true},
+  2:{rotulo:'🔍 Registrar triagem',fn:'registerTriagem',pedeLocal:true},
+  3:{rotulo:'⚙️ Iniciar processamento',fn:'registerProcessing'},
+  4:{rotulo:'♻️ Confirmar reciclagem (gera créditos)',fn:'registerRecycled',pedePeso:true},
+  5:{rotulo:'🔄 Reinserir no mercado',fn:'registerReinserted'}
+};
+const ST_RECICLADO=5, ST_REINSERIDO=6;
+
+function toggleFormLote(){
+  const f=$('formLote');
+  const aberto=f.style.display!=='none';
+  f.style.display=aberto?'none':'block';
+  $('btToggleLote').textContent=aberto?'➕ Registrar novo lote':'✖ Fechar formulário';
+  if(!aberto)preencherSelectLoteCategorias();
+}
+
+async function preencherSelectLoteCategorias(){
+  const sel=$('loteCategoria');if(!sel||!S.catReg)return;
+  try{
+    if(!S.categorias.length)await carregarCategorias();
+    sel.innerHTML=S.categorias.map(c=>{
+      const k=lerCategoria(c);
+      return `<option value="${k.id}" data-codigo="${esc(k.codigo)}" data-cred="${k.creditos}">${esc(k.nome)} (${k.creditos} créditos/kg)</option>`;
+    }).join('')||'<option value="x">Nenhuma categoria</option>';
+    atualizarPreviewLote();
+  }catch(e){sel.innerHTML='<option value="x">Erro ao carregar</option>'}
+}
+function atualizarPreviewLote(){
+  const sel=$('loteCategoria');const peso=Number($('lotePeso').value||0);
+  const cred=Number(sel?.selectedOptions?.[0]?.dataset?.cred||0);
+  if(peso>0&&cred>0){
+    $('lotePreview').style.display='flex';
+    $('lotePreviewValor').textContent=fmt(peso*cred)+' CRC';
+  }else $('lotePreview').style.display='none';
+}
+
+async function registrarLote(){
+  if(!S.signer){toast('Primeiro toque em Entrar, no topo.');return}
+  if(!S.pass){toast('Contrato de passaporte não configurado (contracts.json).');return}
+  const extId=$('loteId').value.trim(), peso=$('lotePeso').value;
+  const comp=$('loteComposicao').value.trim(), origem=$('loteOrigem').value.trim();
+  const sel=$('loteCategoria');
+  if(!extId||!peso||!sel.value||sel.value==='x'){toast('Preencha identificação, categoria e peso.');return}
+  const btn=$('btLote');
+  try{
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Emitindo passaporte…';
+    const codigo=sel.selectedOptions[0].dataset.codigo||'';
+    const dados=JSON.stringify({extId,categoria:sel.value,peso,comp,origem,quando:new Date().toISOString()});
+    const p={
+      recipient:S.endereco,
+      externalProductId:extId,
+      externalDataHash:ethers.keccak256(ethers.toUtf8Bytes(dados)),
+      externalDataURI:'',
+      categoryId:BigInt(sel.value),
+      categoryCode:ethers.encodeBytes32String(codigo.slice(0,31)),
+      weightKg:BigInt(peso),
+      composition:comp,
+      originLocation:origem,
+      isLot:true,
+      quantity:1n
+    };
+    const tx=await S.pass.connect(S.signer).mint(p);
+    toast('<span class="spinner"></span>Registrando na blockchain…',15000);
+    await tx.wait();
+    logTx('Passaporte emitido para '+extId+'.',tx.hash);
+    toast('✅ Passaporte Digital emitido! O lote agora tem identidade única.'+linkTx(tx.hash),6000);
+    btn.disabled=false;btn.textContent='Emitir Passaporte Digital (NFT)';
+    toggleFormLote();
+    ['loteId','lotePeso','loteComposicao','loteOrigem'].forEach(i=>$(i).value='');
+    carregarLotes();
+  }catch(e){
+    btn.disabled=false;btn.textContent='Emitir Passaporte Digital (NFT)';
+    toast('⚠️ '+erroAmigavel(e),6000);log('Erro mint: '+erroAmigavel(e));
+  }
+}
+
+function lerPassaporte(c){
+  const g=(k,i)=>c[k]!==undefined?c[k]:c[i];
+  return {
+    tokenId:g('tokenId',0), extId:g('externalProductId',1),
+    categoriaId:g('categoryId',4), codigo:g('categoryCode',5),
+    peso:g('weightKg',6), registradoPor:g('registeredBy',7),
+    portador:g('currentHolder',8), status:Number(g('status',9)),
+    registradoEm:g('registeredAt',10)
+  };
+}
+function nomeCategoriaPorId(id){
+  for(const c of S.categorias){const k=lerCategoria(c);if(String(k.id)===String(id))return k.nome}
+  return 'Categoria '+id;
+}
+
+async function carregarLotes(){
+  const alvo=$('listaLotes');
+  if(!S.pass){alvo.innerHTML='<div class="centro">Contratos de passaporte ainda não exportados para o site.<br>Rode o export-ui-config no servidor.</div>';return}
+  alvo.innerHTML=skel(2);
+  try{
+    if(!S.categorias.length){try{await carregarCategorias()}catch(e){}}
+    const total=Number(await S.pass.totalPassports());
+    if(!total){alvo.innerHTML='<div class="centro">Nenhum lote registrado ainda. Registre o primeiro! 📦</div>';return}
+    const cards=[];
+    const prox=Number(await S.pass.nextTokenId().catch(()=>total+1));
+    for(let id=prox-1;id>=1&&cards.length<20;id--){
+      try{cards.push(await montarCardLote(id))}catch(e){}
+    }
+    alvo.innerHTML=cards.join('')||'<div class="centro">Nenhum lote encontrado.</div>';
+  }catch(e){
+    alvo.innerHTML='<div class="centro">⚠️ '+esc(erroAmigavel(e))+'</div>';
+    log('Erro lotes: '+erroAmigavel(e));
+  }
+}
+
+async function montarCardLote(tokenId){
+  const core=lerPassaporte(await S.pass.getPassportCore(tokenId));
+  let hist=[];try{hist=await S.pass.getHistory(tokenId)}catch(e){}
+  let meta={};try{meta=await S.pass.getPassportMeta(tokenId)}catch(e){}
+  const comp=meta.composition??meta[0]??'', origem=meta.originLocation??meta[1]??'';
+  const st=core.status;
+  const etapasHtml=ETAPAS.map((e,i)=>
+    `<div class="etapa ${i<st?'feita':i===st?'atual':''}">${e.ico}<br>${e.n}</div>`).join('');
+  const timeline=[...hist].reverse().map(h=>{
+    const hs=Number(h.status??h[0]); const quem=h.updatedBy??h[1];
+    const quando=new Date(Number(h.timestamp??h[2])*1000).toLocaleString('pt-BR');
+    const nota=h.notes??h[3]??'';
+    return `<div class="tl-item"><b>${ETAPAS[hs]?.ico??''} ${ETAPAS[hs]?.n??('Status '+hs)}</b>
+      ${nota?' — '+esc(nota):''}<div class="tl-quando">${quando} · por ${curto(quem)}</div></div>`;
+  }).join('');
+  let acao='';
+  const pa=PROXIMA_ACAO[st];
+  if(st===ST_REINSERIDO){
+    acao=`<div class="voto-ok">🔄 Ciclo completo! Material reinserido na economia.</div>`;
+  }else if(pa&&S.endereco){
+    acao=`<button class="bt-etapa" onclick="avancarEtapa(${tokenId},${st},this)">${pa.rotulo}</button>`;
+  }
+  let creditos='';
+  try{
+    const pago=st>=ST_RECICLADO?await S.rew.rewardPaid(tokenId).catch(()=>false):false;
+    const valor=await S.rew.previewReward(tokenId,core.peso).catch(()=>null);
+    if(pago&&valor!==null)creditos=`<div class="credito-box"><span>✅ Créditos pagos por este lote</span><b>${fmtCred(valor)} CRC</b></div>`;
+    else if(st===ST_RECICLADO)creditos=`<div class="credito-box"><span>⚠️ Reciclado, crédito ainda não pago</span><b>${valor!==null?fmtCred(valor):'—'} CRC</b></div>`;
+    else if(st<ST_RECICLADO&&valor!==null)creditos=`<div class="credito-box"><span>Créditos estimados ao reciclar</span><b>${fmtCred(valor)} CRC</b></div>`;
+  }catch(e){}
+  return `<div class="card prop ${st>=ST_REINSERIDO?'executada':st>=ST_RECICLADO?'aprovada':'votacao'}">
+    <div class="prop-topo">
+      <span style="font-size:1.3rem">📦</span>
+      <span class="chip ${st>=ST_RECICLADO?'aprovada':'votacao'}">${ETAPAS[st]?.n??('Status '+st)}</span>
+    </div>
+    <h3>${esc(core.extId)} <span style="font-weight:400;color:var(--texto-suave);font-size:.85rem">· Passaporte NFT nº ${tokenId}</span></h3>
+    <div class="pdr-grid">
+      <div><div class="rotulo">Categoria</div>${esc(nomeCategoriaPorId(core.categoriaId))}</div>
+      <div><div class="rotulo">Peso</div>${core.peso} kg</div>
+      ${comp?`<div><div class="rotulo">Composição</div>${esc(comp)}</div>`:''}
+      ${origem?`<div><div class="rotulo">Origem</div>${esc(origem)}</div>`:''}
+    </div>
+    <div class="lote-status">${etapasHtml}</div>
+    ${creditos}
+    ${timeline?`<div class="timeline">${timeline}</div>`:''}
+    ${acao}
+  </div>`;
+}
+
+/* ---------- Modal genérico ---------- */
+function abrirModal(titulo,sub,camposHtml,okRotulo,okFn){
+  $('modalTitulo').textContent=titulo;
+  $('modalSub').textContent=sub||'';
+  $('modalCampos').innerHTML=camposHtml;
+  const ok=$('modalOk');ok.textContent=okRotulo||'Confirmar';ok.disabled=false;ok.onclick=okFn;
+  $('modalFundo').style.display='flex';
+  setTimeout(()=>{const f=$('modalCampos').querySelector('input,textarea,select');if(f)f.focus()},60);
+}
+function fecharModal(){$('modalFundo').style.display='none'}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('modalFundo').style.display!=='none')fecharModal();
+});
+
+function avancarEtapa(tokenId,statusAtual,btn){
+  if(!S.track||!S.signer){toast('Primeiro toque em Entrar, no topo.');return}
+  const pa=PROXIMA_ACAO[statusAtual];if(!pa)return;
+  let campos='';
+  if(pa.pedeLocal)campos+=`<label>Local desta etapa</label>
+    <input id="mLocal" placeholder="Ex.: Galpão central, São Paulo/SP">`;
+  if(pa.pedePeso)campos+=`<label>Peso confirmado na balança (kg)</label>
+    <input id="mPeso" type="number" min="1" inputmode="numeric" placeholder="Ex.: 38">
+    <div class="dica">Este peso define quantos créditos serão pagos. Confira na balança antes de confirmar.</div>`;
+  campos+=`<label>Observação (opcional)</label>
+    <input id="mNota" placeholder="Ex.: material limpo, sem contaminação">`;
+  abrirModal(pa.rotulo.replace(/^\S+\s/,''),'Lote nº '+tokenId+' — esta etapa será registrada de forma permanente no passaporte.',
+    campos,pa.rotulo,()=>confirmarEtapa(tokenId,statusAtual,btn));
+}
+
+async function confirmarEtapa(tokenId,statusAtual,btn){
+  const pa=PROXIMA_ACAO[statusAtual];if(!pa)return;
+  const local=$('mLocal')?$('mLocal').value.trim():'';
+  const nota=$('mNota')?$('mNota').value.trim():'';
+  let peso=null;
+  if(pa.pedePeso){
+    const p=Number($('mPeso')?$('mPeso').value:0);
+    if(!p||p<1){toast('Informe o peso em kg confirmado na balança.');return}
+    peso=BigInt(Math.round(p));
+  }
+  fecharModal();
+  try{
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Registrando…';
+    const t=S.track.connect(S.signer);
+    let tx;
+    if(pa.fn==='registerCollection')tx=await t.registerCollection(tokenId,local,nota);
+    else if(pa.fn==='registerTriagem')tx=await t.registerTriagem(tokenId,local,nota);
+    else if(pa.fn==='registerProcessing')tx=await t.registerProcessing(tokenId,nota);
+    else if(pa.fn==='registerRecycled')tx=await t.registerRecycled(tokenId,peso,nota);
+    else if(pa.fn==='registerReinserted')tx=await t.registerReinserted(tokenId,nota);
+    toast('<span class="spinner"></span>Registrando etapa na blockchain…',15000);
+    await tx.wait();
+    logTx('Etapa registrada (lote '+tokenId+').',tx.hash);
+    if(pa.fn==='registerRecycled'){
+      // O pagamento de créditos é uma chamada separada e deve ocorrer ANTES da reinserção
+      try{
+        const core=lerPassaporte(await S.pass.getPassportCore(tokenId));
+        const tx2=await S.rew.connect(S.signer).issueReward(tokenId,core.portador,peso);
+        await tx2.wait();
+        logTx('Créditos pagos (lote '+tokenId+').',tx2.hash);
+        toast('✅ Reciclagem confirmada e créditos CRC pagos ao portador!'+linkTx(tx2.hash),6000);
+      }catch(e2){
+        log('Aviso: créditos não pagos automaticamente: '+erroAmigavel(e2));
+        toast('✅ Reciclagem registrada. ⚠️ Pagamento de créditos requer papel de operador (veja o log).',6000);
+      }
+    }else{
+      toast('✅ Etapa registrada no passaporte!');
+    }
+    carregarLotes();carregarMetricas();
+  }catch(e){
+    btn.disabled=false;btn.textContent=pa.rotulo;
+    toast('⚠️ '+erroAmigavel(e),6000);log('Erro etapa: '+erroAmigavel(e));
+  }
+}
+
+function atualizarTudo(){
+  carregarMetricas();atualizarMeuPainel();
+  carregarPropostas();carregarTransparencia();
+  toast('↻ Dados atualizados.');
+}
+
+/* ================== BOOT ================== */
+iniciar();
+</script>
+</body>
+</html>
