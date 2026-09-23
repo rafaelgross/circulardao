@@ -7,6 +7,8 @@
     "registry": "0x329615cE2142A6bae05691144d0bEaEd4c014D6a",
     "deployer": "0xF44c9Fe8A1f0fF317225E06d59065bfb25442701",
     "gitCommit": "cec100ce69e410d721c9df4cc0db124071255646",
+    "gitCommitNote": "gitCommit above is the parent commit HEAD pointed to while this run executed (the C1-C7 fixes, S5/S6 scenarios and this script were uncommitted local changes at run time). The commit that actually contains the code evaluated by this run is 21387bcc7b55da0ef89127a9400613d7bb22b2c4, committed and pushed immediately after this run finished, with no code changes in between.",
+    "evaluatedAtCommit": "21387bcc7b55da0ef89127a9400613d7bb22b2c4",
     "startedAt": "2026-09-23T00:37:40.527Z",
     "quorum": "4000",
     "votingPeriod": "60",

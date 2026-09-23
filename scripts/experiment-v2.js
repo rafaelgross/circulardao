@@ -482,8 +482,11 @@ async function main() {
   const registry = await ethers.getContractAt(CONFIG.registryName, CONFIG.registry);
 
   let gitCommit = null;
+  let gitDirty = null;
   try {
-    gitCommit = execSync('git rev-parse HEAD', { cwd: path.join(__dirname, '..') }).toString().trim();
+    const repoRoot = path.join(__dirname, '..');
+    gitCommit = execSync('git rev-parse HEAD', { cwd: repoRoot }).toString().trim();
+    gitDirty = execSync('git status --porcelain', { cwd: repoRoot }).toString().trim().length > 0;
   } catch { /* not fatal if git isn't available */ }
 
   metaSoFar = {
@@ -494,8 +497,18 @@ async function main() {
     registry: CONFIG.registry,
     deployer: deployer.address,
     gitCommit,
+    // If the working tree had uncommitted changes at run time, gitCommit is
+    // NOT necessarily what was actually evaluated — commit right after the
+    // run (with no further code changes) and record that commit separately,
+    // rather than trusting this field at face value.
+    gitDirtyAtRunTime: gitDirty,
     startedAt: new Date().toISOString(),
   };
+  if (gitDirty) {
+    log(`  WARNING: working tree has uncommitted changes. gitCommit (${gitCommit}) may not match the code ` +
+        `actually evaluated by this run — commit immediately after, with no further edits, and record that ` +
+        `commit hash alongside this report.`);
+  }
 
   const decimals = await token.decimals();
   const unit = 10n ** BigInt(decimals);

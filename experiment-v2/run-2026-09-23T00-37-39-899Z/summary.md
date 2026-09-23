@@ -1,6 +1,7 @@
 # CircularDAO extended governance evaluation — run 2026-09-23T00-37-39-899Z
 
-Commit: cec100ce69e410d721c9df4cc0db124071255646 · Governor: 0xB72737A3D35c00Afa8e2ff0Ba435eE635Ee66767 · Token: 0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020 · Registry: 0x329615cE2142A6bae05691144d0bEaEd4c014D6a
+Evaluated code: commit `21387bcc7b55da0ef89127a9400613d7bb22b2c4` (committed immediately after this run, no code changes in between; `HEAD` was `cec100c` — a prior commit — while the run itself executed, since the C1-C7 fixes and this script were still local, uncommitted changes at that point).
+Governor: 0xB72737A3D35c00Afa8e2ff0Ba435eE635Ee66767 · Token: 0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020 · Registry: 0x329615cE2142A6bae05691144d0bEaEd4c014D6a
 Overall result: **ALL CHECKS PASSED**
 
 | Operation | n | Gas (mean) | Gas (min) | Gas (max) | Latency (s, mean) |

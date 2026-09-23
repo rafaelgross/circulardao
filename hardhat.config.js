@@ -19,5 +19,8 @@ module.exports = {
       accounts: process.env.SEPOLIA_PK ? [process.env.SEPOLIA_PK] : [],
       chainId: 11155111
     }
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY || ""
   }
 };
