@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "problems": [],
+  "run1": {
+    "addresses": {
+      "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "governor": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    },
+    "gas": {
+      "deploy_token": 1621017,
+      "transfer": 135960,
+      "propose": 69021,
+      "vote": 82468
+    },
+    "hashes": {
+      "transfer": "0xe01fb086ec8d5ccdd199466999a6a1511c14b8dfc1a2cec9d7a746f64c367c4d",
+      "propose": "0xc999bb1ceba1c419552dc089ce0a915cba30cf459d0d94d4c291f6ecbf6b7d46",
+      "vote": "0x586ec0c37843f5ade7a8994cee68b1dab057d65698cacca38a7263e120adce2a"
+    }
+  },
+  "run2": {
+    "addresses": {
+      "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "governor": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    },
+    "gas": {
+      "deploy_token": 1621017,
+      "transfer": 135960,
+      "propose": 69021,
+      "vote": 82468
+    },
+    "hashes": {
+      "transfer": "0xe01fb086ec8d5ccdd199466999a6a1511c14b8dfc1a2cec9d7a746f64c367c4d",
+      "propose": "0xc999bb1ceba1c419552dc089ce0a915cba30cf459d0d94d4c291f6ecbf6b7d46",
+      "vote": "0x586ec0c37843f5ade7a8994cee68b1dab057d65698cacca38a7263e120adce2a"
+    }
+  }
+}

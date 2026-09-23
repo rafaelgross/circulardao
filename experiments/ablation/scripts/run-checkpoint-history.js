@@ -15,7 +15,7 @@
 // the protocol's own expected value.
 const hre = require("hardhat");
 const { ethers } = hre;
-const { newRun, step, deployCondition, verifyCorrespondence, STATE } = require("./lib");
+const { newRun, step, recordQuery, deployCondition, verifyIntegrity, STATE } = require("./lib");
 
 const VOTING_DELAY = 20; // must exceed k/2 (max 8) for P2's pre-activation transfers to land before the snapshot
 const VOTING_PERIOD = 20;
@@ -55,8 +55,8 @@ async function runP1(ctx, variant, k) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 666]);
-  const description = `5.2-P1-k${k}-${variant} ${ctx.runId} ${Date.now()}-${Math.random()}`;
-  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P1", posicao: "P1", k },
+  const description = `ablation-v1.4-5.2-P1-k${k}-${variant}`;
+  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P1", posicao: "P1", k, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const proposalId = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
     .find((e) => e && e.name === "ProposalCreated").args.proposalId;
@@ -66,10 +66,10 @@ async function runP1(ctx, variant, k) {
   const numCkpts = await token.numCheckpoints(voter.address);
   const pastVotes = await governor.getVotes(voter.address, snapshot);
   console.log(`  P1 k=${k} (${variant}): numCheckpoints=${numCkpts} (expect ${k})  getPastVotes=${pastVotes / unit} (expect 4000)`);
-  if (Number(numCkpts) !== k) throw new Error(`P1 k=${k} (${variant}): numCheckpoints=${numCkpts}, expected ${k} — condition interrupted, investigate`);
-  if (pastVotes !== TOTAL_WEIGHT * unit) throw new Error(`P1 k=${k} (${variant}): getPastVotes=${pastVotes}, expected exactly ${TOTAL_WEIGHT * unit} — condition interrupted, investigate`);
+  recordQuery(ctx, { etapa: "check_numCheckpoints", variante: variant, condicao: `5.2-P1-k${k}`, query: "token.numCheckpoints(voter)", expected: k, actual: numCkpts, ok: Number(numCkpts) === k });
+  recordQuery(ctx, { etapa: "check_pastVotes", variante: variant, condicao: `5.2-P1-k${k}`, query: "governor.getVotes(voter, snapshot)", expected: (TOTAL_WEIGHT * unit).toString(), actual: pastVotes, ok: pastVotes === TOTAL_WEIGHT * unit });
 
-  const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P1", posicao: "P1", k, direcao: "for", ordem: 1 },
+  const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P1", posicao: "P1", k, direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(proposalId, 1));
   console.log(`  P1 k=${k} (${variant}): measured vote gas=${voteReceipt.gasUsed}`);
 }
@@ -89,8 +89,8 @@ async function runP2(ctx, variant, k) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 777]);
-  const description = `5.2-P2-k${k}-${variant} ${ctx.runId} ${Date.now()}-${Math.random()}`;
-  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P2", posicao: "P2", k },
+  const description = `ablation-v1.4-5.2-P2-k${k}-${variant}`;
+  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P2", posicao: "P2", k, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const proposalId = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
     .find((e) => e && e.name === "ProposalCreated").args.proposalId;
@@ -126,13 +126,13 @@ async function runP2(ctx, variant, k) {
   const pastVotes = await governor.getVotes(voter.address, snapshot);
   const liveBalance = await token.balanceOf(voter.address);
   console.log(`  P2 k=${k} (${variant}): numCheckpoints=${numCkpts} (expect ${k})  getPastVotes=${pastVotes / unit} (expect 4000)  liveBalance=${liveBalance / unit} (expect ${half % 2 === 0 ? 4000 : 3999})`);
-  if (Number(numCkpts) !== k) throw new Error(`P2 k=${k} (${variant}): numCheckpoints=${numCkpts}, expected ${k} — condition interrupted, investigate`);
-  if (pastVotes !== TOTAL_WEIGHT * unit) throw new Error(`P2 k=${k} (${variant}): getPastVotes=${pastVotes}, expected exactly ${TOTAL_WEIGHT * unit} — condition interrupted, investigate`);
+  recordQuery(ctx, { etapa: "check_numCheckpoints", variante: variant, condicao: `5.2-P2-k${k}`, query: "token.numCheckpoints(voter)", expected: k, actual: numCkpts, ok: Number(numCkpts) === k });
+  recordQuery(ctx, { etapa: "check_pastVotes", variante: variant, condicao: `5.2-P2-k${k}`, query: "governor.getVotes(voter, snapshot)", expected: (TOTAL_WEIGHT * unit).toString(), actual: pastVotes, ok: pastVotes === TOTAL_WEIGHT * unit });
 
   const stateNow = STATE[Number(await governor.state(proposalId))];
-  if (stateNow !== "Active") throw new Error(`P2 k=${k} (${variant}): proposal is ${stateNow}, not Active, at vote time`);
+  recordQuery(ctx, { etapa: "check_state_before_vote", variante: variant, condicao: `5.2-P2-k${k}`, query: "governor.state(id) before measured vote", expected: "Active", actual: stateNow, ok: stateNow === "Active" });
 
-  const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P2", posicao: "P2", k, direcao: "for", ordem: 1 },
+  const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P2", posicao: "P2", k, direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(proposalId, 1));
   console.log(`  P2 k=${k} (${variant}): measured vote gas=${voteReceipt.gasUsed}`);
 }
@@ -156,10 +156,17 @@ async function main() {
     }
   }
 
-  verifyCorrespondence(ctx);
+  verifyIntegrity(ctx);
   ctx.manifest.finishedAt = new Date().toISOString();
+  ctx.manifest.governedOperation = { target: "WasteCategoryRegistry.updateCredits(uint256,uint256)", proposedVia: "propose() (generic) for all three variants" };
+  ctx.manifest.quorumByVariant = {
+    V1: { model: "none" },
+    V2: { model: "fixed", supply: SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
+    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
+  };
+  ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));
-  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json)`);
+  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json, queries.json)`);
 }
 
 main().catch((e) => { console.error("FAILED:", e); process.exitCode = 1; });

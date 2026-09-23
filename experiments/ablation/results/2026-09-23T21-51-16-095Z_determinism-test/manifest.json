@@ -1,0 +1,71 @@
+{
+  "runId": "2026-09-23T21-51-16-095Z_determinism-test",
+  "label": "determinism-test",
+  "protocolVersion": "1.4",
+  "kind": "development",
+  "startedAt": "2026-09-23T21:51:16.139Z",
+  "git": {
+    "commit": "8169e5f36a1758e53a25ac8c764058c87cd496de",
+    "tag": null,
+    "isResultRun": false,
+    "dirtyAtRunTime": true
+  },
+  "solidity": {
+    "version": "0.8.28",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "cancun"
+  },
+  "hardfork": "osaka",
+  "network": "hardhat",
+  "forking": null,
+  "openzeppelinVersion": "5.6.1",
+  "deployments": [
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 1,
+      "votingPeriod": 60,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "governor": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        1,
+        60
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 1,
+      "votingPeriod": 60,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "governor": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        1,
+        60
+      ]
+    }
+  ],
+  "finishedAt": "2026-09-23T21:51:20.357Z",
+  "determinismTest": {
+    "ok": true,
+    "problemCount": 0
+  }
+}

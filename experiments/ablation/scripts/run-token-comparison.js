@@ -17,7 +17,7 @@
 // and is explicitly out of scope).
 const hre = require("hardhat");
 const { ethers } = hre;
-const { newRun, step, recordTx, verifyCorrespondence } = require("./lib");
+const { newRun, step, recordTx, verifyIntegrity } = require("./lib");
 
 const SUPPLY = ethers.parseEther("100000");
 const AMOUNT = ethers.parseEther("1000");
@@ -83,10 +83,10 @@ async function main() {
     await step(ctx, { variante: "T1-delegated", token: "T1", etapa: "delegate_from_funded_balance" }, () => token.connect(d).delegate(d.address));
   }
 
-  verifyCorrespondence(ctx);
+  verifyIntegrity(ctx);
   ctx.manifest.finishedAt = new Date().toISOString();
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));
-  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json)`);
+  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json, queries.json)`);
 }
 
 main().catch((e) => { console.error("FAILED:", e); process.exitCode = 1; });

@@ -1,0 +1,29 @@
+[
+  {
+    "etapa": "fork_sanity_check",
+    "variante": "Ref",
+    "condicao": "6-calibration-strategyA",
+    "query": "token.balanceOf(deployer) on the fork, at block 11761430",
+    "expected": "83000000000000000000000 (matches sepolia_deployer_checkpoints.json's checkpoint at fromBlock 11761222)",
+    "actual": "83000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_after_voting_delay",
+    "variante": "Ref",
+    "condicao": "6-calibration-strategyA",
+    "query": "governor.state(proposalId) after mining votingDelay+1 blocks",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_final_state",
+    "variante": "Ref",
+    "condicao": "6-calibration-strategyA",
+    "query": "governor.state(proposalId) after replaying the full S1 cycle",
+    "expected": "Executed",
+    "actual": "Executed",
+    "ok": true
+  }
+]

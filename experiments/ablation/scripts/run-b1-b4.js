@@ -21,7 +21,7 @@
 // not a choice to make results look more comparable than they are.
 const hre = require("hardhat");
 const { ethers } = hre;
-const { newRun, step, deployCondition, verifyCorrespondence, STATE } = require("./lib");
+const { newRun, step, recordQuery, deployCondition, verifyIntegrity, STATE } = require("./lib");
 
 const VOTING_DELAY = 1;
 const VOTING_PERIOD = 10;
@@ -34,11 +34,24 @@ async function mineBlocks(n) {
   await hre.network.provider.send("hardhat_mine", ["0x" + n.toString(16)]);
 }
 
+// Fixed, deterministic description (protocol v1.4 step 1) — no Date.now()/
+// Math.random()/runId. This is safe even though it repeats the same string
+// across separate script runs: hashProposal() (and thus proposalId) does not
+// include the governor's own address, but each run deploys a brand new
+// governor with brand new storage, so identical proposalIds in two different
+// governor contracts never collide with each other.
 async function propose(ctx, variant, governor, registry, proposer, categoryId, newFactor, condicao) {
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [categoryId, newFactor]);
-  const description = `${condicao}-${variant} ${ctx.runId} ${Date.now()}-${Math.random()}`;
-  const receipt = await step(ctx, { variante: variant, etapa: "propose", condicao },
+  const description = `ablation-v1.4-${condicao}-${variant}-cat${categoryId}-factor${newFactor}`;
+  // Always the generic propose() — including for Ref, which also exposes a
+  // proposeUpdateCreditWeight(...) wrapper (protocol v1.4 step 2 requires
+  // recording which one is used). The wrapper is deliberately NOT used here:
+  // it is pure metadata sugar over this same propose() call (confirmed by
+  // reading CircularDAO.sol), so calling propose() directly keeps the
+  // compared operation — same selector, same targets/calldata/description
+  // shape — byte-identical across all four variants.
+  const receipt = await step(ctx, { variante: variant, etapa: "propose", condicao, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(proposer).propose([registryAddr], [0], [calldata], description));
   const created = receipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
     .find((e) => e && e.name === "ProposalCreated");
@@ -69,21 +82,21 @@ async function runB1(ctx, variant) {
   await mineBlocks(VOTING_DELAY + 1);
   const snapshot = await governor.proposalSnapshot(p.proposalId);
   const weightAtActivation = await governor.getVotes(acquirer.address, snapshot);
-  if (weightAtActivation !== 0n) throw new Error(`B1 invalid: acquirer already had ${weightAtActivation} weight at activation`);
+  recordQuery(ctx, { etapa: "check_weight_at_activation", variante: variant, condicao: "B1", query: "governor.getVotes(acquirer, snapshot)", expected: "0", actual: weightAtActivation, ok: weightAtActivation === 0n });
 
   const before = await governor.proposalVotes(p.proposalId);
   await step(ctx, { variante: variant, etapa: "transfer_post_snapshot", condicao: "B1" },
     () => token.connect(ctx.admin).transfer(acquirer.address, ethers.parseEther("20000")));
   await step(ctx, { variante: variant, etapa: "delegate_post_snapshot", condicao: "B1" },
     () => token.connect(acquirer).delegate(acquirer.address));
-  await step(ctx, { variante: variant, etapa: "vote", condicao: "B1", direcao: "for", ordem: 1 },
+  await step(ctx, { variante: variant, etapa: "vote", condicao: "B1", direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(acquirer).castVote(p.proposalId, 1));
   const after = await governor.proposalVotes(p.proposalId);
   const moved = after.forVotes - before.forVotes;
 
   const expected = variant === "V0" ? ethers.parseEther("20000") : 0n;
   console.log(`  B1  weight@activation=${weightAtActivation}  tally moved by=${moved}  expected=${expected}`);
-  if (moved !== expected) throw new Error(`B1 (${variant}): expected tally to move by ${expected}, got ${moved}`);
+  recordQuery(ctx, { etapa: "check_tally_movement", variante: variant, condicao: "B1", query: "proposalVotes(id).forVotes delta after post-snapshot transfer+vote", expected, actual: moved, ok: moved === expected });
 }
 
 async function runB2(ctx, variant) {
@@ -95,22 +108,22 @@ async function runB2(ctx, variant) {
 
   const p = await propose(ctx, variant, governor, registry, ctx.admin, 1, 222, "B2");
   await mineBlocks(VOTING_DELAY + 1);
-  await step(ctx, { variante: variant, etapa: "vote", condicao: "B2", direcao: "for", ordem: 1 },
+  await step(ctx, { variante: variant, etapa: "vote", condicao: "B2", direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(small).castVote(p.proposalId, 1));
   await mineBlocks(VOTING_PERIOD + 1);
   const state = STATE[Number(await governor.state(p.proposalId))];
   const expected = (variant === "V0" || variant === "V1") ? "Succeeded" : "Defeated";
   console.log(`  B2  state=${state}  expected=${expected}`);
-  if (state !== expected) throw new Error(`B2 (${variant}): expected ${expected}, got ${state}`);
+  recordQuery(ctx, { etapa: "check_state", variante: variant, condicao: "B2", query: "governor.state(id)", expected, actual: state, ok: state === expected });
 
   if (state === "Succeeded") {
-    await step(ctx, { variante: variant, etapa: "execute", condicao: "B2" },
+    await step(ctx, { variante: variant, etapa: "execute", condicao: "B2", funcao: "execute", operacao_governada: "WasteCategoryRegistry.updateCredits" },
       () => governor.execute(p.targets, p.values, [p.calldata], p.descHash));
     const cat = await registry.getCategory(1);
     console.log(`  B2  registered creditsPerKg=${cat.creditsPerKg} (expect 222)`);
-    if (cat.creditsPerKg !== 222n) throw new Error(`B2 (${variant}): registry shows ${cat.creditsPerKg}, expected 222`);
+    recordQuery(ctx, { etapa: "check_executed_effect", variante: variant, condicao: "B2", query: "registry.getCategory(1).creditsPerKg", expected: "222", actual: cat.creditsPerKg, ok: cat.creditsPerKg === 222n });
   } else {
-    await step(ctx, { variante: variant, etapa: "execute_attempt", condicao: "B2" },
+    await step(ctx, { variante: variant, etapa: "execute_attempt", condicao: "B2", funcao: "execute", operacao_governada: "WasteCategoryRegistry.updateCredits" },
       () => governor.execute(p.targets, p.values, [p.calldata], p.descHash, { gasLimit: 300000 }),
       { expectRevert: true, decodeFn: () => governor.execute.staticCall(p.targets, p.values, [p.calldata], p.descHash) });
   }
@@ -132,10 +145,10 @@ async function runB3(ctx, variant) {
   await mineBlocks(VOTING_DELAY + 1);
   let ordem = 1;
   for (const v of [b3For1, b3For2, b3For3]) {
-    await step(ctx, { variante: variant, etapa: "vote", condicao: "B3", direcao: "for", ordem: ordem++ },
+    await step(ctx, { variante: variant, etapa: "vote", condicao: "B3", direcao: "for", ordem: ordem++, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
       () => governor.connect(v).castVote(p.proposalId, 1));
   }
-  await step(ctx, { variante: variant, etapa: "vote", condicao: "B3", direcao: "against", ordem: 1 },
+  await step(ctx, { variante: variant, etapa: "vote", condicao: "B3", direcao: "against", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(b3Against).castVote(p.proposalId, 0));
   await mineBlocks(VOTING_PERIOD + 1);
 
@@ -144,10 +157,10 @@ async function runB3(ctx, variant) {
   const state = STATE[Number(await governor.state(p.proposalId))];
   console.log(`  B3  for=${tally.forVotes} against=${tally.againstVotes} quorum=${quorumAtSnapshot} state=${state}`);
 
-  if (tally.forVotes !== 3n * W) throw new Error(`B3 (${variant}): forVotes=${tally.forVotes}, expected ${3n * W}`);
-  if (tally.againstVotes !== ethers.parseEther("63000")) throw new Error(`B3 (${variant}): againstVotes=${tally.againstVotes}, expected 63000`);
-  if (tally.forVotes < quorumAtSnapshot) throw new Error(`B3 (${variant}): quorum (${quorumAtSnapshot}) not met by the FOR side alone (${tally.forVotes}) — defeat would not be attributable to vote weight`);
-  if (state !== "Defeated") throw new Error(`B3 (${variant}): expected Defeated, got ${state}`);
+  recordQuery(ctx, { etapa: "check_for_votes", variante: variant, condicao: "B3", query: "proposalVotes(id).forVotes", expected: (3n * W).toString(), actual: tally.forVotes, ok: tally.forVotes === 3n * W });
+  recordQuery(ctx, { etapa: "check_against_votes", variante: variant, condicao: "B3", query: "proposalVotes(id).againstVotes", expected: ethers.parseEther("63000").toString(), actual: tally.againstVotes, ok: tally.againstVotes === ethers.parseEther("63000") });
+  recordQuery(ctx, { etapa: "check_quorum_met_by_for_alone", variante: variant, condicao: "B3", query: "forVotes >= governor.quorum(snapshot)", expected: "true", actual: tally.forVotes >= quorumAtSnapshot, ok: tally.forVotes >= quorumAtSnapshot });
+  recordQuery(ctx, { etapa: "check_state", variante: variant, condicao: "B3", query: "governor.state(id)", expected: "Defeated", actual: state, ok: state === "Defeated" });
 }
 
 async function runB4(ctx, variant) {
@@ -160,7 +173,7 @@ async function runB4(ctx, variant) {
   await mineBlocks(VOTING_DELAY + 1);
 
   // 1) the first vote must actually succeed.
-  const firstReceipt = await step(ctx, { variante: variant, etapa: "vote", condicao: "B4", direcao: "for", ordem: 1 },
+  const firstReceipt = await step(ctx, { variante: variant, etapa: "vote", condicao: "B4", direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(p.proposalId, 1));
   if (firstReceipt.status !== 1) throw new Error(`B4 (${variant}): first vote did not succeed (status ${firstReceipt.status})`);
 
@@ -174,13 +187,15 @@ async function runB4(ctx, variant) {
   // — decoded via a staticCall replay of the exact same call, done inside
   // step() BEFORE sending, and returned on the receipt so it's asserted on
   // here rather than trusted blindly.
-  const repeatReceipt = await step(ctx, { variante: variant, etapa: "vote_repeat", condicao: "B4", direcao: "for", ordem: 2 },
+  const repeatReceipt = await step(ctx, { variante: variant, etapa: "vote_repeat", condicao: "B4", direcao: "for", ordem: 2, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(p.proposalId, 1, { gasLimit: 200000 }),
     { expectRevert: true, decodeFn: () => governor.connect(voter).castVote.staticCall(p.proposalId, 1) });
 
   const decodedOk = /GovernorAlreadyCastVote/.test(repeatReceipt.revertReason || "");
   console.log(`  B4  first vote status=${firstReceipt.status}  state before repeat=${stateBeforeRepeat}  repeat status=${repeatReceipt.status}  reason="${repeatReceipt.revertReason}"  confirmsGovernorAlreadyCastVote=${decodedOk}`);
-  if (!decodedOk) throw new Error(`B4 (${variant}): repeat-vote failure was not confirmed to be GovernorAlreadyCastVote specifically (reason: "${repeatReceipt.revertReason}")`);
+  recordQuery(ctx, { etapa: "check_first_vote_succeeded", variante: variant, condicao: "B4", query: "firstReceipt.status", expected: "1", actual: firstReceipt.status, ok: firstReceipt.status === 1 });
+  recordQuery(ctx, { etapa: "check_state_before_repeat", variante: variant, condicao: "B4", query: "governor.state(id) before repeat attempt", expected: "Active", actual: stateBeforeRepeat, ok: stateBeforeRepeat === "Active" });
+  recordQuery(ctx, { etapa: "check_repeat_reason", variante: variant, condicao: "B4", query: "decoded revert reason of repeat castVote", expected: "GovernorAlreadyCastVote", actual: repeatReceipt.revertReason, ok: decodedOk });
 }
 
 async function main() {
@@ -201,10 +216,17 @@ async function main() {
     await runB4(ctx, variant);
   }
 
-  verifyCorrespondence(ctx);
+  verifyIntegrity(ctx);
   ctx.manifest.finishedAt = new Date().toISOString();
+  ctx.manifest.governedOperation = { target: "WasteCategoryRegistry.updateCredits(uint256,uint256)", proposedVia: "propose() (generic) for all four variants — Ref's proposeUpdateCreditWeight wrapper is metadata sugar over the same call, deliberately not used, so the compared selector/calldata is identical across variants" };
+  ctx.manifest.quorumByVariant = {
+    V0: { model: "none" }, V1: { model: "none" },
+    V2: { model: "fixed", supply: SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
+    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor, not a deploy parameter)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
+  };
+  ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));
-  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json)`);
+  console.log(`\nwrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json, queries.json)`);
 }
 
 main().catch((e) => { console.error("FAILED:", e); process.exitCode = 1; });

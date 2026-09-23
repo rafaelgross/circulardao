@@ -1,0 +1,19 @@
+{
+  "token": "0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020",
+  "deployer": "0xF44c9Fe8A1f0fF317225E06d59065bfb25442701",
+  "queriedAt": "2026-09-23T21:20:00.000Z",
+  "numCheckpoints": "7",
+  "checkpoints": [
+    { "index": 0, "fromBlock": "11761200", "votes": "100000000000000000000000" },
+    { "index": 1, "fromBlock": "11761210", "votes": "96000000000000000000000" },
+    { "index": 2, "fromBlock": "11761212", "votes": "92000000000000000000000" },
+    { "index": 3, "fromBlock": "11761214", "votes": "88000000000000000000000" },
+    { "index": 4, "fromBlock": "11761217", "votes": "84000000000000000000000" },
+    { "index": 5, "fromBlock": "11761222", "votes": "83000000000000000000000" },
+    { "index": 6, "fromBlock": "11761627", "votes": "63000000000000000000000" }
+  ],
+  "s5SnapshotBlock": 11761688,
+  "checkpointsBeforeOrAtS5Snapshot": 7,
+  "checkpointsAfterS5Snapshot": 0,
+  "note": "All 7 checkpoints predate the S5 snapshot (11761688) — the deployer's vote in S5 read a history with k=7 checkpoints already in the past, snapshot-after-all-history (P1-shaped), not the mid-history P2 shape. Compare against P1 gas-by-k in the ablation checkpoint-history results, not P2."
+}

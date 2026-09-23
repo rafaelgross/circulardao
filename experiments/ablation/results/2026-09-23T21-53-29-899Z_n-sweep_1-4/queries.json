@@ -1,0 +1,722 @@
+[
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "A-unanime-N1",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V0",
+    "condicao": "A-unanime-N1",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "A-unanime-N1",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V1",
+    "condicao": "A-unanime-N1",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "A-unanime-N1",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V2",
+    "condicao": "A-unanime-N1",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "A-unanime-N1",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "A-unanime-N1",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "Ref",
+    "condicao": "A-unanime-N1",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "16000000000000000000000",
+    "actual": "16000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "A-unanime-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V0",
+    "condicao": "A-unanime-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "16000000000000000000000",
+    "actual": "16000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "A-unanime-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V1",
+    "condicao": "A-unanime-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "16000000000000000000000",
+    "actual": "16000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "A-unanime-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V2",
+    "condicao": "A-unanime-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "16000000000000000000000",
+    "actual": "16000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "A-unanime-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "A-unanime-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "Ref",
+    "condicao": "A-unanime-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "A-maioria-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V0",
+    "condicao": "A-maioria-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "A-maioria-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V1",
+    "condicao": "A-maioria-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "A-maioria-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V2",
+    "condicao": "A-maioria-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "A-maioria-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "A-maioria-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "Ref",
+    "condicao": "A-maioria-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "aprovada",
+    "actual": "aprovada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "D-voto-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V0",
+    "condicao": "D-voto-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "D-voto-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V1",
+    "condicao": "D-voto-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "D-voto-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V2",
+    "condicao": "D-voto-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "D-voto-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "D-voto-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "Ref",
+    "condicao": "D-voto-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "E-empate-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V0",
+    "condicao": "E-empate-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "E-empate-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V1",
+    "condicao": "E-empate-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "E-empate-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "V2",
+    "condicao": "E-empate-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "E-empate-N4",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "8000000000000000000000",
+    "actual": "8000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "E-empate-N4",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_outcome",
+    "variante": "Ref",
+    "condicao": "E-empate-N4",
+    "query": "derived outcome from governor.state(id)",
+    "expected": "derrotada",
+    "actual": "derrotada",
+    "ok": true
+  }
+]

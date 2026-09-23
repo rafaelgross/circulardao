@@ -16,7 +16,7 @@
 // same independence requirement established for B1-B4.
 const hre = require("hardhat");
 const { ethers } = hre;
-const { newRun, step, deployCondition, verifyCorrespondence, STATE } = require("./lib");
+const { newRun, step, recordQuery, deployCondition, verifyIntegrity, STATE } = require("./lib");
 
 const VOTING_DELAY = 1;
 // Hardhat Network auto-mines one block per transaction (no batching), so
@@ -82,8 +82,9 @@ async function runOne(ctx, variant, N, condicao) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 555]);
-  const description = `5.1-${condicao}-N${N}-${variant} ${ctx.runId} ${Date.now()}-${Math.random()}`;
-  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao, N },
+  // Fixed, deterministic description (v1.4 step 1) — no Date.now()/Math.random()/runId; safe for the same reason documented in run-b1-b4.js (hashProposal excludes the governor address, but each combination deploys its own fresh governor).
+  const description = `ablation-v1.4-5.1-${condicao}-N${N}-${variant}`;
+  const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao, N, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const created = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
     .find((e) => e && e.name === "ProposalCreated");
@@ -112,22 +113,22 @@ async function runOne(ctx, variant, N, condicao) {
 
   console.log(`  N=${N} ${condicao} (${variant}): for=${tally.forVotes / VOTER_WEIGHT}x4000 against=${tally.againstVotes / VOTER_WEIGHT}x4000 quorum=${quorumAtSnapshot / VOTER_WEIGHT}x4000 state=${state}`);
 
-  if (tally.forVotes !== BigInt(forCount) * VOTER_WEIGHT) throw new Error(`N=${N} ${condicao} (${variant}): forVotes mismatch`);
-  if (tally.againstVotes !== BigInt(againstCount) * VOTER_WEIGHT) throw new Error(`N=${N} ${condicao} (${variant}): againstVotes mismatch`);
-  if (forCount > 0 && tally.forVotes < quorumAtSnapshot) {
-    throw new Error(`N=${N} ${condicao} (${variant}): quorum (${quorumAtSnapshot}) not met by the FOR side alone (${tally.forVotes}) — protocol 5.1 expects quorum to always be met when at least one FOR vote exists`);
+  recordQuery(ctx, { etapa: "check_for_votes", variante: variant, condicao: `${condicao}-N${N}`, query: "proposalVotes(id).forVotes", expected: (BigInt(forCount) * VOTER_WEIGHT).toString(), actual: tally.forVotes, ok: tally.forVotes === BigInt(forCount) * VOTER_WEIGHT });
+  recordQuery(ctx, { etapa: "check_against_votes", variante: variant, condicao: `${condicao}-N${N}`, query: "proposalVotes(id).againstVotes", expected: (BigInt(againstCount) * VOTER_WEIGHT).toString(), actual: tally.againstVotes, ok: tally.againstVotes === BigInt(againstCount) * VOTER_WEIGHT });
+  if (forCount > 0) {
+    recordQuery(ctx, { etapa: "check_quorum_met_by_for_alone", variante: variant, condicao: `${condicao}-N${N}`, query: "forVotes >= governor.quorum(snapshot)", expected: "true", actual: tally.forVotes >= quorumAtSnapshot, ok: tally.forVotes >= quorumAtSnapshot });
   }
-  if (outcome !== expectedOutcome[condicao]) throw new Error(`N=${N} ${condicao} (${variant}): expected ${expectedOutcome[condicao]}, got ${state}`);
+  recordQuery(ctx, { etapa: "check_outcome", variante: variant, condicao: `${condicao}-N${N}`, query: "derived outcome from governor.state(id)", expected: expectedOutcome[condicao], actual: outcome, ok: outcome === expectedOutcome[condicao] });
 
   // Execution: only measured for the A-conditions. D/E get a separate,
   // expected-to-revert execute ATTEMPT — never aggregated with a successful
   // execution's stats (protocol 5.1: "Execução bem-sucedida e tentativa
   // revertida nunca são agregadas na mesma estatística").
   if (expectedOutcome[condicao] === "aprovada") {
-    await step(ctx, { variante: variant, etapa: "execute", condicao, N },
+    await step(ctx, { variante: variant, etapa: "execute", condicao, N, funcao: "execute", operacao_governada: "WasteCategoryRegistry.updateCredits" },
       () => governor.execute([registryAddr], [0], [calldata], ethers.id(description)));
   } else {
-    await step(ctx, { variante: variant, etapa: "execute_attempt", condicao, N },
+    await step(ctx, { variante: variant, etapa: "execute_attempt", condicao, N, funcao: "execute", operacao_governada: "WasteCategoryRegistry.updateCredits" },
       () => governor.execute([registryAddr], [0], [calldata], ethers.id(description), { gasLimit: 300000 }),
       { expectRevert: true, decodeFn: () => governor.execute.staticCall([registryAddr], [0], [calldata], ethers.id(description)) });
   }
@@ -156,12 +157,19 @@ async function main() {
     }
   }
 
-  verifyCorrespondence(ctx);
+  verifyIntegrity(ctx);
   ctx.manifest.finishedAt = new Date().toISOString();
   ctx.manifest.sweepSummary = { Ns, planned, ran, skipped, refMaxN: REF_MAX_N };
+  ctx.manifest.governedOperation = { target: "WasteCategoryRegistry.updateCredits(uint256,uint256)", proposedVia: "propose() (generic) for all four variants" };
+  ctx.manifest.quorumByVariant = {
+    V0: { model: "none" }, V1: { model: "none" },
+    V2: { model: "fixed", supply: MAIN_SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
+    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor)", supply: REF_SUPPLY.toString(), effectiveQuorum: (REF_SUPPLY * 4n / 100n).toString() },
+  };
+  ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));
   console.log(`\nplanned=${planned} ran=${ran} skipped=${skipped}`);
-  console.log(`wrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json)`);
+  console.log(`wrote ${ctx.outDir}/ (manifest.json, results.csv, receipts.json, queries.json)`);
 }
 
 main().catch((e) => { console.error("FAILED:", e); process.exitCode = 1; });

@@ -1,0 +1,113 @@
+{
+  "runId": "2026-09-23T21-58-43-425Z_sepolia-calibration-v2-strategyA",
+  "label": "sepolia-calibration-v2-strategyA",
+  "protocolVersion": "1.4",
+  "kind": "development",
+  "startedAt": "2026-09-23T21:58:43.490Z",
+  "git": {
+    "commit": "8169e5f36a1758e53a25ac8c764058c87cd496de",
+    "tag": null,
+    "isResultRun": false,
+    "dirtyAtRunTime": true
+  },
+  "solidity": {
+    "version": "0.8.28",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "cancun"
+  },
+  "hardfork": "osaka",
+  "network": "hardhat",
+  "forking": {
+    "url": "https://ethereum-sepolia-rpc.publicnode.com",
+    "blockNumber": 11761430
+  },
+  "openzeppelinVersion": "5.6.1",
+  "deployments": [],
+  "calibrationStrategy": {
+    "chosen": "A",
+    "reason": "Confirmed viable before writing this script: forking Sepolia at block 11761430 via the public RPC endpoint successfully read real historical state (deployer balance 83,000 DAOG, matching sepolia_deployer_checkpoints.json). Strategy B (functional reconstruction) was the fallback if this had failed.",
+    "forkBlock": 11761430,
+    "realTxSource": "experiments/ablation/results/sepolia_s1_real_transactions.json (fetched via eth_getTransactionByHash against ethereum-sepolia-rpc.publicnode.com)",
+    "sepoliaDeployCommit": "21387bcc7b55da0ef89127a9400613d7bb22b2c4"
+  },
+  "governedOperation": {
+    "target": "WasteCategoryRegistry.addCategory(...)",
+    "proposedVia": "proposeAddCategory (the real Sepolia S1 call itself, replayed byte-for-byte — its actual selector, confirmed against the real tx's input, is what's replayed, not a re-encoding)"
+  },
+  "contracts": {
+    "governor": "0xB72737A3D35c00Afa8e2ff0Ba435eE635Ee66767",
+    "token": "0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020",
+    "registry": "0x329615cE2142A6bae05691144d0bEaEd4c014D6a",
+    "note": "real, already-deployed, already-verified Sepolia production contracts read through the fork — not redeployed, not the experimental T1VotesERC20/CircularDAO used in the other four sub-experiments"
+  },
+  "finishedAt": "2026-09-23T21:58:47.028Z",
+  "calibration": [
+    {
+      "operation": "propose",
+      "sepolia_gas": 666054,
+      "local_replay_gas": 666054,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0x33e84e6c19bafabf6e1705730d888b422d559b3040280bd1fbec7936f5deeb9b",
+      "local_replay_tx_hash": "0x8a59c328a28d7ca09b7ae406e88ff7a2cf627a93ad315533c21db739bcddf72b"
+    },
+    {
+      "operation": "vote_for_1",
+      "sepolia_gas": 83384,
+      "local_replay_gas": 83384,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0xb3b06be607bfc1ab727facb319fbb7327dbb436f48d3d44371b157d08c2553e1",
+      "local_replay_tx_hash": "0x918b494d1b34289a67359437c6467c5f2bc8ced2f823191bdac2edf0f6247969"
+    },
+    {
+      "operation": "vote_for_2",
+      "sepolia_gas": 66284,
+      "local_replay_gas": 66284,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0x45aac11dc4b080995bd122b7ecaa09bd64e01356921f58958e9bd91847786523",
+      "local_replay_tx_hash": "0x89497c5195ad91f546659c45cbeb86eb955394a9f728c2a4f185ce099d3c88b8"
+    },
+    {
+      "operation": "vote_for_3",
+      "sepolia_gas": 66284,
+      "local_replay_gas": 66284,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0xb0ba34998e54a7f83be98238dd8fe20b98b9c88c7ba29f9925b40b4ee10adf7c",
+      "local_replay_tx_hash": "0x39d327dfc20bb9b94b1bbd3c2c9a3bb78e16c44b3f7ca5e2817e0e7ddd777dd4"
+    },
+    {
+      "operation": "vote_against",
+      "sepolia_gas": 83343,
+      "local_replay_gas": 83343,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0x29e3b41ac5d00c744ab4d78f167d8f075002e0d610529df7bfc8081951032894",
+      "local_replay_tx_hash": "0x58ae2a70158c1bdb481d27daff975443b17d8bfea9077994bfc1bb71f9f8a85d"
+    },
+    {
+      "operation": "repeated_vote",
+      "sepolia_gas": 38224,
+      "local_replay_gas": 38224,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0xd83c9a60c5caab941bdb8da8434c7d324f3cb21fa0cd7a3c8995983942018165",
+      "local_replay_tx_hash": "0x624b66432c1fd8e2dbfd10d8b59e269ac4cfaa700b60c469bbb0108ff79fab5a"
+    },
+    {
+      "operation": "execute",
+      "sepolia_gas": 398089,
+      "local_replay_gas": 398089,
+      "diff_gas": 0,
+      "diff_pct": "0.00",
+      "sepolia_tx_hash": "0x6890c7dbbe4a1eaf7b65bb97a65a72466d4e8113c00e5cf1f467bd6fe655920c",
+      "local_replay_tx_hash": "0xd83a80dcfda5a0b2ca47800d68f9b33ff1e7bee630883be4d15c0c1696606117"
+    }
+  ]
+}
