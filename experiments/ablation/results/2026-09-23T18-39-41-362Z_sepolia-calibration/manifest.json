@@ -1,0 +1,100 @@
+{
+  "runId": "2026-09-23T18-39-41-362Z_sepolia-calibration",
+  "label": "sepolia-calibration",
+  "kind": "development",
+  "startedAt": "2026-09-23T18:39:41.414Z",
+  "git": {
+    "commit": "7b021f5952d1a7025ca2fa8589b1ba767dfc28da",
+    "tag": null,
+    "isResultRun": false,
+    "dirtyAtRunTime": true
+  },
+  "solidity": {
+    "version": "0.8.28",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "cancun"
+  },
+  "hardfork": "cancun",
+  "openzeppelinVersion": "5.6.1",
+  "deployments": [
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 1,
+      "votingPeriod": 60,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "governor": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+        "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+        1,
+        60
+      ]
+    }
+  ],
+  "finishedAt": "2026-09-23T18:39:45.960Z",
+  "calibration": [
+    {
+      "operation": "propose",
+      "sepolia_gas": 666054,
+      "local_gas": 681935,
+      "diff_gas": 15881,
+      "diff_pct": "2.38"
+    },
+    {
+      "operation": "vote_for_1",
+      "sepolia_gas": 83384,
+      "local_gas": 83098,
+      "diff_gas": -286,
+      "diff_pct": "-0.34"
+    },
+    {
+      "operation": "vote_for_2",
+      "sepolia_gas": 66284,
+      "local_gas": 65998,
+      "diff_gas": -286,
+      "diff_pct": "-0.43"
+    },
+    {
+      "operation": "vote_for_3",
+      "sepolia_gas": 66284,
+      "local_gas": 65998,
+      "diff_gas": -286,
+      "diff_pct": "-0.43"
+    },
+    {
+      "operation": "vote_against",
+      "sepolia_gas": 83343,
+      "local_gas": 83057,
+      "diff_gas": -286,
+      "diff_pct": "-0.34"
+    },
+    {
+      "operation": "repeated_vote",
+      "sepolia_gas": 38224,
+      "local_gas": 37938,
+      "diff_gas": -286,
+      "diff_pct": "-0.75"
+    },
+    {
+      "operation": "execute",
+      "sepolia_gas": 398089,
+      "local_gas": 397759,
+      "diff_gas": -330,
+      "diff_pct": "-0.08"
+    }
+  ]
+}

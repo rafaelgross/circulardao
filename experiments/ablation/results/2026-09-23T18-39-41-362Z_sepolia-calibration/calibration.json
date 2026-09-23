@@ -1,0 +1,55 @@
+{
+  "sepoliaSource": "experiment-v2/run-2026-09-23T00-37-39-899Z/transactions.csv",
+  "sepoliaDeployCommit": "21387bcc7b55da0ef89127a9400613d7bb22b2c4",
+  "rows": [
+    {
+      "operation": "propose",
+      "sepolia_gas": 666054,
+      "local_gas": 681935,
+      "diff_gas": 15881,
+      "diff_pct": "2.38"
+    },
+    {
+      "operation": "vote_for_1",
+      "sepolia_gas": 83384,
+      "local_gas": 83098,
+      "diff_gas": -286,
+      "diff_pct": "-0.34"
+    },
+    {
+      "operation": "vote_for_2",
+      "sepolia_gas": 66284,
+      "local_gas": 65998,
+      "diff_gas": -286,
+      "diff_pct": "-0.43"
+    },
+    {
+      "operation": "vote_for_3",
+      "sepolia_gas": 66284,
+      "local_gas": 65998,
+      "diff_gas": -286,
+      "diff_pct": "-0.43"
+    },
+    {
+      "operation": "vote_against",
+      "sepolia_gas": 83343,
+      "local_gas": 83057,
+      "diff_gas": -286,
+      "diff_pct": "-0.34"
+    },
+    {
+      "operation": "repeated_vote",
+      "sepolia_gas": 38224,
+      "local_gas": 37938,
+      "diff_gas": -286,
+      "diff_pct": "-0.75"
+    },
+    {
+      "operation": "execute",
+      "sepolia_gas": 398089,
+      "local_gas": 397759,
+      "diff_gas": -330,
+      "diff_pct": "-0.08"
+    }
+  ]
+}

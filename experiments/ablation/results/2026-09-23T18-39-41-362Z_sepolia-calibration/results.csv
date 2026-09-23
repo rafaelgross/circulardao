@@ -1,0 +1,22 @@
+execucao,variante,token,N,condicao,posicao,k,etapa,ordem,direcao,gas,status,motivo_reversao,tx_hash
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,T1,,,,,deploy_token_T1,,,1621017,1,,0x8a423d158719dafa7ff4b82bcd6f6a5661f61c993e6aaede0acbe21a849af082
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,,,,deploy_registry,,,4590964,1,,0x9005486642112873086c0faf3a06ce7199e3377186a80eb6eea4235f5e1c6f56
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,,,,deploy_governor_Ref,,,4434623,1,,0x3be491f231e993ce72750c74a4f60295b52b091e45e0ca06cb2b1cb9e5d7d510
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,,,,grant_admin_role,,,50799,1,,0x9477ec21ceecb8e71e570a8e5c711d060981c6dc53217d4071b2c7d012604374
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,,,,revoke_deployer_admin_role,,,27116,1,,0x4571f6b2b82c72e95dbfd028346a3c95cee362f1cdc4e946338a9d1e56d58c09
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,delegate_admin,,,95559,1,,0xfca7f8e34a7a367a38495092e6c6ae53f6f6bbc6c6cdd047fed83c770b76a8c9
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,delegate,,,48347,1,,0x2f1db724527155bbb87015320f4de9a632dd20bb0d57eddcbd649b18207511a9
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,transfer,,,135960,1,,0xf73818cab7bec22c2873568741ee5b205f7bcf739ff4a4e81e3c97b5f44fe6a7
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,delegate,,,48335,1,,0xb14cd818d079768dd0b788aaa7eaa523d8b60a175adadb469b25983d014c7105
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,transfer,,,135948,1,,0xbf8bb4e90ea492cc583c784c95702e6dff1d2ecb51ab3787750d7c3f73c61e3d
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,delegate,,,48347,1,,0x7c89ad214f77116c026983997c1e0dd76549cf1f5576259e316d297c57768a6c
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,transfer,,,135960,1,,0x95354546201ad7966109d62bfa41c854ebc432f0a74f68125a938ca586a18679
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,delegate,,,48347,1,,0x02d627e7a4ebd349ddeb34b5c69cc513e18aa16b3e1da7f3963c9f67d6b36330
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,transfer,,,135960,1,,0xc30bedb18b8643513cd1d301a9cf22447101f5af7b9256407c967cf6fdebde94
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,propose,,,681935,1,,0x4e583938444ddd861d27f3428c8e6da5055bcbfdb6351da15d380750e14afc7c
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,vote_for_1,1,for,83098,1,,0xbe3e5c7cac10dd63628ee61b07387b0c7f3f302e5d69a6f519c01344493beadc
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,vote_for_2,2,for,65998,1,,0xe4c427b680438b3d303663c9b6646d173b627e5da8dbb7c15b0561dcef7132db
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,vote_for_3,3,for,65998,1,,0x93736d7495af9592efa607e9e01b39a6aea31c0a2b3d78e14f29ee61aa099880
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,vote_against,1,against,83057,1,,0x440a35b926c55ac14c1825ea6f4810cfafbe95de1fe0f056c43c69f7a01a47c7
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,repeated_vote,2,for,37938,0,VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote('0x70997970C51812dc3A010C7d01b50e0d17dc79C8')',0x8eaa31efa668ff78f8d7c42838cb1d35913abc5c2520eb52462c359756679e18
+2026-09-23T18-39-41-362Z_sepolia-calibration,Ref,,,6-calibration,,,execute,,,397759,1,,0x7cf62eab7193cb894befb8e8472250771160993767aa8e7728dc24cc77e20ccd
