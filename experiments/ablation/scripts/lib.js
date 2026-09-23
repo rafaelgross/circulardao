@@ -35,7 +35,6 @@ function newRun(label) {
     git,
     csvRows: [],
     receipts: [],
-    order: {}, // per (variant, proposalId, direction) -> running index, for "ordem do voto" in the CSV
     manifest: {
       runId,
       label,
@@ -54,23 +53,7 @@ function newRun(label) {
   return ctx;
 }
 
-/** Records one CSV row (protocol section 7 schema) and, if a receipt is given, its full JSON too. */
-function recordRow(ctx, row) {
-  ctx.csvRows.push(row);
-  flush(ctx);
-}
-
-function recordReceipt(ctx, receipt, extra = {}) {
-  ctx.receipts.push({
-    hash: receipt.hash, block: receipt.blockNumber,
-    gasUsed: receipt.gasUsed.toString(),
-    status: receipt.status,
-    ...extra,
-  });
-  flush(ctx);
-}
-
-const CSV_HEADER = ["execucao", "variante", "token", "N", "condicao", "posicao", "k", "etapa", "ordem", "direcao", "gas", "status", "motivo_reversao"];
+const CSV_HEADER = ["execucao", "variante", "token", "N", "condicao", "posicao", "k", "etapa", "ordem", "direcao", "gas", "status", "motivo_reversao", "tx_hash"];
 
 function flush(ctx) {
   const csv = [CSV_HEADER.join(",")]
@@ -85,13 +68,77 @@ function flush(ctx) {
   fs.writeFileSync(path.join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));
 }
 
-/** Sends a transaction, records the CSV row + full receipt, returns the receipt.
- * `expectRevert`: if true, a revert is the expected/valid outcome (status 0
- * is not an error) and the decoded reason is captured via staticCall replay. */
+/** Records ONE transaction into both receipts.json and results.csv, atomically,
+ * keyed by the same tx_hash on both sides — by construction, not by discipline,
+ * so "recorded a receipt but forgot the CSV row" (an actual bug in an earlier
+ * version of this file) can't happen again. */
+function recordTx(ctx, receipt, meta) {
+  ctx.receipts.push({
+    hash: receipt.hash, block: receipt.blockNumber,
+    gasUsed: receipt.gasUsed.toString(),
+    status: receipt.status,
+    etapa: meta.etapa, variante: meta.variante,
+    revertReason: meta.motivo_reversao || "",
+  });
+  ctx.csvRows.push({
+    execucao: ctx.runId,
+    variante: meta.variante ?? "",
+    token: meta.token ?? "",
+    N: meta.N ?? "",
+    condicao: meta.condicao ?? "",
+    posicao: meta.posicao ?? "",
+    k: meta.k ?? "",
+    etapa: meta.etapa,
+    ordem: meta.ordem ?? "",
+    direcao: meta.direcao ?? "",
+    gas: receipt.gasUsed.toString(),
+    status: receipt.status,
+    motivo_reversao: meta.motivo_reversao ?? "",
+    tx_hash: receipt.hash,
+  });
+  flush(ctx);
+}
+
+/** Checks that every receipt has exactly one CSV row with the same tx_hash and
+ * vice versa — matching totals is not proof of correspondence (flagged in
+ * review: an earlier version had 136 of each but no per-hash check, and a
+ * mis-added arithmetic check hid a real gap). Throws on any mismatch instead
+ * of just logging, so a broken run can't silently produce a "result". */
+function verifyCorrespondence(ctx) {
+  const receiptHashes = ctx.receipts.map((r) => r.hash);
+  const csvHashes = ctx.csvRows.map((r) => r.tx_hash);
+  const countOf = (arr) => arr.reduce((m, h) => (m.set(h, (m.get(h) || 0) + 1), m), new Map());
+  const rCounts = countOf(receiptHashes);
+  const cCounts = countOf(csvHashes);
+
+  const problems = [];
+  for (const [h, n] of rCounts) {
+    if (!cCounts.has(h)) problems.push(`receipt ${h} has no CSV row`);
+    else if (cCounts.get(h) !== n) problems.push(`receipt ${h} appears ${n}x but CSV has ${cCounts.get(h)}x`);
+  }
+  for (const [h] of cCounts) {
+    if (!rCounts.has(h)) problems.push(`CSV row ${h} has no matching receipt`);
+  }
+  if (problems.length > 0) {
+    throw new Error(`verifyCorrespondence failed (${problems.length} problem(s)):\n` + problems.join("\n"));
+  }
+  console.log(`verifyCorrespondence: OK — ${receiptHashes.length} receipts, each with exactly one matching CSV row (by tx_hash), no duplicates, no gaps.`);
+}
+
+/** Sends a transaction, records the CSV row + full receipt (same tx_hash on
+ * both), returns the receipt. `expectRevert`: if true, a revert is the
+ * expected/valid outcome (status 0 is not an error) and the decoded reason
+ * is captured via a staticCall replay BEFORE sending, using the exact same
+ * call. */
 async function step(ctx, meta, sendFn, { expectRevert = false, decodeFn = null } = {}) {
   let revertReason = "";
   if (expectRevert && decodeFn) {
-    try { await decodeFn(); } catch (e) { revertReason = e.shortMessage || e.reason || e.message || ""; }
+    try {
+      await decodeFn();
+      revertReason = "(staticCall did not revert — status below is the only evidence)";
+    } catch (e) {
+      revertReason = e.shortMessage || e.reason || e.message || "";
+    }
   }
   let tx;
   try {
@@ -109,24 +156,12 @@ async function step(ctx, meta, sendFn, { expectRevert = false, decodeFn = null }
   } catch (e) {
     receipt = e.receipt || await ethers.provider.getTransactionReceipt(tx.hash);
   }
-  recordReceipt(ctx, receipt, { etapa: meta.etapa, variante: meta.variante, revertReason });
-  recordRow(ctx, {
-    execucao: ctx.runId,
-    variante: meta.variante ?? "",
-    token: meta.token ?? "",
-    N: meta.N ?? "",
-    condicao: meta.condicao ?? "",
-    posicao: meta.posicao ?? "",
-    k: meta.k ?? "",
-    etapa: meta.etapa,
-    ordem: meta.ordem ?? "",
-    direcao: meta.direcao ?? "",
-    gas: receipt.gasUsed.toString(),
-    status: receipt.status,
-    motivo_reversao: revertReason,
-  });
+  recordTx(ctx, receipt, { ...meta, motivo_reversao: revertReason });
+  const statusLabel = receipt.status === 1 ? "ok" : "reverted";
+  console.log(`    [${meta.variante ?? ""}/${meta.condicao ?? ""}] ${meta.etapa} gas=${receipt.gasUsed} ${statusLabel}${revertReason ? ` (${revertReason})` : ""}`);
   if (expectRevert && receipt.status !== 0) throw new Error(`${meta.etapa}: expected revert, got status ${receipt.status}`);
   if (!expectRevert && receipt.status !== 1) throw new Error(`${meta.etapa}: expected success, got status ${receipt.status} (${revertReason})`);
+  receipt.revertReason = revertReason; // attached for callers that need to assert on it (e.g. B4)
   return receipt;
 }
 
@@ -135,16 +170,12 @@ async function deployCondition(ctx, { variant, tokenKind, supply, votingDelay, v
   const TokenFactory = await ethers.getContractFactory(tokenKind === "T0" ? "T0PlainERC20" : "T1VotesERC20");
   const token = await TokenFactory.deploy(supply);
   await token.waitForDeployment();
-  const tokenDeployReceipt = await token.deploymentTransaction().wait();
-  recordReceipt(ctx, tokenDeployReceipt, { etapa: `deploy_token_${tokenKind}`, variante: variant });
-  recordRow(ctx, { execucao: ctx.runId, variante: variant, token: tokenKind, etapa: `deploy_token_${tokenKind}`, gas: tokenDeployReceipt.gasUsed.toString(), status: tokenDeployReceipt.status });
+  recordTx(ctx, await token.deploymentTransaction().wait(), { etapa: `deploy_token_${tokenKind}`, variante: variant, token: tokenKind });
 
   const Registry = await ethers.getContractFactory("WasteCategoryRegistry");
   const registry = await Registry.deploy(admin.address);
   await registry.waitForDeployment();
-  const registryDeployReceipt = await registry.deploymentTransaction().wait();
-  recordReceipt(ctx, registryDeployReceipt, { etapa: "deploy_registry", variante: variant });
-  recordRow(ctx, { execucao: ctx.runId, variante: variant, etapa: "deploy_registry", gas: registryDeployReceipt.gasUsed.toString(), status: registryDeployReceipt.status });
+  recordTx(ctx, await registry.deploymentTransaction().wait(), { etapa: "deploy_registry", variante: variant });
 
   let governor, governorFactoryName, extraCtorArgs = [];
   if (variant === "V0" || variant === "V1") {
@@ -174,19 +205,13 @@ async function deployCondition(ctx, { variant, tokenKind, supply, votingDelay, v
     throw new Error(`unknown variant ${variant}`);
   }
   await governor.waitForDeployment();
-  const governorDeployReceipt = await governor.deploymentTransaction().wait();
-  recordReceipt(ctx, governorDeployReceipt, { etapa: `deploy_governor_${variant}`, variante: variant });
-  recordRow(ctx, { execucao: ctx.runId, variante: variant, etapa: `deploy_governor_${variant}`, gas: governorDeployReceipt.gasUsed.toString(), status: governorDeployReceipt.status });
+  recordTx(ctx, await governor.deploymentTransaction().wait(), { etapa: `deploy_governor_${variant}`, variante: variant });
 
   const ADMIN_ROLE = await registry.ADMIN_ROLE();
-  const grantTx = await registry.connect(admin).grantRole(ADMIN_ROLE, await governor.getAddress());
-  const grantReceipt = await grantTx.wait();
-  recordReceipt(ctx, grantReceipt, { etapa: "grant_admin_role", variante: variant });
-  recordRow(ctx, { execucao: ctx.runId, variante: variant, etapa: "grant_admin_role", gas: grantReceipt.gasUsed.toString(), status: grantReceipt.status });
-  const revokeTx = await registry.connect(admin).revokeRole(ADMIN_ROLE, admin.address);
-  const revokeReceipt = await revokeTx.wait();
-  recordReceipt(ctx, revokeReceipt, { etapa: "revoke_deployer_admin_role", variante: variant });
-  recordRow(ctx, { execucao: ctx.runId, variante: variant, etapa: "revoke_deployer_admin_role", gas: revokeReceipt.gasUsed.toString(), status: revokeReceipt.status });
+  recordTx(ctx, await (await registry.connect(admin).grantRole(ADMIN_ROLE, await governor.getAddress())).wait(),
+    { etapa: "grant_admin_role", variante: variant });
+  recordTx(ctx, await (await registry.connect(admin).revokeRole(ADMIN_ROLE, admin.address)).wait(),
+    { etapa: "revoke_deployer_admin_role", variante: variant });
 
   ctx.manifest.deployments.push({
     variant, tokenKind, supply: supply.toString(), votingDelay, votingPeriod,
@@ -204,4 +229,4 @@ async function deployCondition(ctx, { variant, tokenKind, supply, votingDelay, v
   return { token, registry, governor };
 }
 
-module.exports = { STATE, newRun, recordRow, recordReceipt, step, deployCondition, flush };
+module.exports = { STATE, newRun, recordTx, step, deployCondition, verifyCorrespondence, flush };

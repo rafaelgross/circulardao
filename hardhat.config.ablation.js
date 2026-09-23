@@ -8,10 +8,18 @@
 // ablation runner needs the real-chain behavior to record a genuine receipt
 // for every "expected revert" step (protocol section 9: "preservar os
 // recibos completos de todas as transações... incluindo as que revertem").
-// Flipping these off only for this config keeps hardhat-chai-matchers'
+// Flipping this off only for this config keeps hardhat-chai-matchers'
 // revertedWith/revertedWithCustomError (used throughout test/) working
 // exactly as before in the default config, which relies on the opposite
 // behavior (the call throwing) to detect a revert.
+//
+// throwOnCallFailures is deliberately left at its default (true): that one
+// governs eth_call/staticCall, which the runner uses specifically to DECODE
+// the revert reason (it needs the call to throw a decodable error). Turning
+// it off too, as an earlier version of this file did, broke that decoding —
+// staticCall stopped throwing a normal decoded error and produced ethers'
+// generic "invalid length for result data" instead, which is a bug this file
+// caused, not something inherent to Hardhat Network.
 require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -27,8 +35,7 @@ module.exports = {
   networks: {
     hardhat: {
       hardfork: "cancun",
-      throwOnTransactionFailures: false,
-      throwOnCallFailures: false
+      throwOnTransactionFailures: false
     }
   }
 };
