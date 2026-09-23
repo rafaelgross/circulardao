@@ -1,0 +1,119 @@
+[
+  {
+    "hash": "0xfe59821c7e707e506f58ede2dca4f9b3fbd0e04e597105202a4a51b7dddb3187",
+    "block": 1,
+    "gasUsed": "493337",
+    "status": 1,
+    "etapa": "deploy",
+    "variante": "T0",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xf600db8887ce5d274b4b07a95269fbfd94507996a915c4bba875fafdf8558ec4",
+    "block": 2,
+    "gasUsed": "51252",
+    "status": 1,
+    "etapa": "transfer_first",
+    "variante": "T0",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xc8466184ada1813ba3621c28f32c28fe95b972e2cec72e0ba0deb71116fc9d37",
+    "block": 3,
+    "gasUsed": "34152",
+    "status": 1,
+    "etapa": "transfer_subsequent",
+    "variante": "T0",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x540dcbcf69cd18c51fda67e7cf0a91bcd2bd71d3b2fe4cb0ac3eb5d6f18af578",
+    "block": 4,
+    "gasUsed": "1621017",
+    "status": 1,
+    "etapa": "deploy",
+    "variante": "T1-undelegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x6113e53db2cfa75e3ffe092bc7addc01ba6f58389f43fdabb473f4df7a184ef4",
+    "block": 5,
+    "gasUsed": "56171",
+    "status": 1,
+    "etapa": "transfer_first",
+    "variante": "T1-undelegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x9d6aca555eb569d284834f1709c18e9a2c3a7d2db9f005fefca6532c7ad72f9a",
+    "block": 6,
+    "gasUsed": "39071",
+    "status": 1,
+    "etapa": "transfer_subsequent",
+    "variante": "T1-undelegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x8339e57b55214a5ff631d6e1d52757689709d7fe3014eaf8f18c18f2f0cbd36b",
+    "block": 7,
+    "gasUsed": "1621017",
+    "status": 1,
+    "etapa": "deploy",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xf58c4d9b2e9309739ccc7bd55e02dd215a19d674791230902d4558e5f27d791d",
+    "block": 8,
+    "gasUsed": "95559",
+    "status": 1,
+    "etapa": "delegate_admin",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xae188a2f1c65e7861d63229ef73dac92ff12f09d6fe602d2040bff76e777da88",
+    "block": 9,
+    "gasUsed": "48347",
+    "status": 1,
+    "etapa": "delegate_recipient_at_zero_balance",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x10a1c37e40748d58ea26e3e291898673619df091aed4a3a5259c71f788e59ec4",
+    "block": 10,
+    "gasUsed": "135960",
+    "status": 1,
+    "etapa": "transfer_first",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xdfe9e25316eaa27b794dfc4401a8394332adb6b106721897cf5ac79ccb7f09d4",
+    "block": 11,
+    "gasUsed": "104267",
+    "status": 1,
+    "etapa": "transfer_subsequent",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x62984f27fb565a2e1021fdd7572cb6464c89a1cf2087090d820a813e996ccc14",
+    "block": 12,
+    "gasUsed": "88813",
+    "status": 1,
+    "etapa": "transfer_to_d",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x4912d83b753b6bc41157af0dfc430defcdeeda30149909df739f4e988ffc7fab",
+    "block": 13,
+    "gasUsed": "95559",
+    "status": 1,
+    "etapa": "delegate_from_funded_balance",
+    "variante": "T1-delegated",
+    "revertReason": ""
+  }
+]
