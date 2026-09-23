@@ -35,7 +35,10 @@ module.exports = {
   networks: {
     hardhat: {
       hardfork: "cancun",
-      throwOnTransactionFailures: false
+      throwOnTransactionFailures: false,
+      // Default is 20; the N-sweep (5.1) needs up to 50 independent voters
+      // plus admin/proposer roles.
+      accounts: { count: 120 }
     }
   }
 };
