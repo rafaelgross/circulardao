@@ -7,13 +7,29 @@
 //
 // Supersedes run-sepolia-calibration.js (kept, not deleted — it is Round 1's
 // record of what was actually compared then, flagged as flawed by the v1.4
-// correction roadmap for exactly the two reasons this version fixes: (a) it
-// reproduced the S1 cycle against the EXPERIMENTAL token, not the deployed
-// production GovernanceToken; (b) it ran under hardfork "cancun", not the
-// hardfork Sepolia was actually enforcing at the S1 block (Fusaka/Osaka,
-// confirmed via WebSearch against theblock.co/blog.ethereum.org/
-// cointelegraph.com — Sepolia's Fusaka activation was 2025-10-14, well
-// before S1's 2026-09-23 block).
+// correction roadmap for two reasons: (a) it reproduced the S1 cycle against
+// the EXPERIMENTAL token, not the deployed production GovernanceToken —
+// this version fixes that by reading the real deployed contracts through the
+// fork; (b) it ran under an explicit hardfork "cancun" that was never
+// verified against what Sepolia itself enforces. This version does not fix
+// (b) by picking a specific hardfork name — it sidesteps the question
+// instead: hardhat.config.ablation-fork.js sets NO explicit `hardfork`, so
+// Hardhat resolves the EVM rules for this fork from its own bundled
+// per-chain activation table for chainId 11155111 (Sepolia) — see
+// node_modules/hardhat/internal/core/config/default-config.js's `chains`
+// map — rather than from a hand-picked guess. Whatever that resolves to is,
+// by construction, at least as well-informed about Sepolia's real history as
+// this project can get without vendoring its own copy of that table. The
+// 0.00% gas match across all 7 replayed operations (below) is itself
+// evidence the resolution was correct for these operations specifically —
+// a mismatched hardfork would be expected to shift gas on at least some of
+// the 7 (propose/vote/execute touch storage writes, event logs, and
+// external calls, the kind of operations hardfork gas repricings usually
+// touch). A prior version of this comment asserted Sepolia was running
+// "Fusaka/Osaka" at the S1 block based on a WebSearch of mainnet/general
+// Ethereum hardfork news, not Sepolia-specific, testnet-verified data — that
+// claim is retracted; see hardhat.config.ablation.js for the follow-up
+// check on whether it even matters (empirically, for this study, it doesn't).
 //
 // How this works: hardhat.config.ablation-fork.js forks Sepolia at block
 // 11761430 (one block before S1's first transaction). This process's own

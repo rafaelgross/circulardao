@@ -9,16 +9,23 @@
 // scenario happened to leave behind — caught in review before this was
 // treated as a result.
 //
-// Supply is 100,000 for every deployment (Ref's fixed 4% fraction -> exactly
-// 4,000, matching V2's fixed quorum and the real Sepolia deployment). With
+// Supply is 100,000 for every deployment (Ref's quorum fraction, 4% of ITS
+// OWN token's supply -> exactly 4,000, matching V2's fixed quorum and the
+// real Sepolia deployment). With
 // scenarios independent, B3 (the heaviest at 75,000 tokens distributed)
 // still fits comfortably inside a single fresh 100,000-supply deployment, so
 // Ref runs in all four B-scenarios with no exclusion at this scale. The
 // large N-sweep (5.1, not started) is a different story — N=32 and N=50 need
 // more tokens than a 100,000-supply Ref can hold while keeping its quorum at
 // 4,000, and Ref will need to be explicitly excluded there. That is a
-// consequence of Ref's quorum fraction being fixed in the deployed contract,
-// not a choice to make results look more comparable than they are.
+// consequence of Ref's quorum being a FRACTION of supply rather than a fixed
+// value — the 4% itself is only the value set at construction time
+// (GovernorVotesQuorumFraction(4) in CircularDAO's constructor); OpenZeppelin's
+// base contract exposes updateQuorumNumerator(), gated onlyGovernance, so the
+// DAO could change it via a passed proposal. No proposal here ever touches it,
+// so it stays 4% throughout every run in this study — but describing it as
+// permanently "fixed"/"hardcoded" overstates what the constructor actually
+// does; it is the INITIAL value, not an immutable one.
 const hre = require("hardhat");
 const { ethers } = hre;
 const { newRun, step, recordQuery, deployCondition, verifyIntegrity, STATE } = require("./lib");
@@ -222,7 +229,7 @@ async function main() {
   ctx.manifest.quorumByVariant = {
     V0: { model: "none" }, V1: { model: "none" },
     V2: { model: "fixed", supply: SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
-    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor, not a deploy parameter)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
+    Ref: { model: "fraction-of-supply (initial value 4%, set via GovernorVotesQuorumFraction(4) in CircularDAO's constructor; changeable later only through a passed governance proposal calling updateQuorumNumerator() — untouched in this run, so still 4% throughout)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
   };
   ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));

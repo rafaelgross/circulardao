@@ -31,7 +31,7 @@ async function main() {
     const T0 = await ethers.getContractFactory("T0PlainERC20");
     const token = await T0.deploy(SUPPLY);
     await token.waitForDeployment();
-    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T0", token: "T0", etapa: "deploy" });
+    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T0", token: "T0", etapa: "deploy", funcao: "constructor" }, token.deploymentTransaction());
     ctx.manifest.deployments = ctx.manifest.deployments || [];
     ctx.manifest.deployments.push({ token: "T0", supply: SUPPLY.toString(), address: await token.getAddress() });
 
@@ -50,7 +50,7 @@ async function main() {
     const T1 = await ethers.getContractFactory("T1VotesERC20");
     const token = await T1.deploy(SUPPLY);
     await token.waitForDeployment();
-    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T1-undelegated", token: "T1", etapa: "deploy" });
+    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T1-undelegated", token: "T1", etapa: "deploy", funcao: "constructor" }, token.deploymentTransaction());
 
     await step(ctx, { variante: "T1-undelegated", token: "T1", etapa: "transfer_first", ordem: 1 },
       () => token.connect(admin).transfer(b.address, AMOUNT));
@@ -63,7 +63,7 @@ async function main() {
     const T1 = await ethers.getContractFactory("T1VotesERC20");
     const token = await T1.deploy(SUPPLY);
     await token.waitForDeployment();
-    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T1-delegated", token: "T1", etapa: "deploy" });
+    recordTx(ctx, await token.deploymentTransaction().wait(), { variante: "T1-delegated", token: "T1", etapa: "deploy", funcao: "constructor" }, token.deploymentTransaction());
 
     // Delegation gas: self-delegate at zero balance (the pattern used
     // everywhere else in this study — protocol condition 4).

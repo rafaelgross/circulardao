@@ -55,7 +55,12 @@ async function runP1(ctx, variant, k) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 666]);
-  const description = `ablation-v1.4-5.2-P1-k${k}-${variant}`;
+  // Deliberately NOT parameterized by `variant` (v1.4 step 1 correction) — same
+  // reasoning as run-n-sweep.js: registry lands at the same address for every
+  // variant (same nonce position after each deployCondition() reset), so an
+  // identical description/calldata makes proposalId byte-identical too, checked
+  // in main() below, not just asserted in a comment.
+  const description = `ablation-v1.4-5.2-P1-k${k}`;
   const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P1", posicao: "P1", k, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const proposalId = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
@@ -72,6 +77,7 @@ async function runP1(ctx, variant, k) {
   const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P1", posicao: "P1", k, direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(proposalId, 1));
   console.log(`  P1 k=${k} (${variant}): measured vote gas=${voteReceipt.gasUsed}`);
+  return { proposalId, registryAddr };
 }
 
 async function runP2(ctx, variant, k) {
@@ -89,7 +95,7 @@ async function runP2(ctx, variant, k) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 777]);
-  const description = `ablation-v1.4-5.2-P2-k${k}-${variant}`;
+  const description = `ablation-v1.4-5.2-P2-k${k}`; // see the P1 comment above — deliberately variant-independent
   const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao: "5.2-P2", posicao: "P2", k, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const proposalId = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
@@ -135,6 +141,7 @@ async function runP2(ctx, variant, k) {
   const voteReceipt = await step(ctx, { variante: variant, etapa: "vote_measured", condicao: "5.2-P2", posicao: "P2", k, direcao: "for", ordem: 1, funcao: "castVote", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(voter).castVote(proposalId, 1));
   console.log(`  P2 k=${k} (${variant}): measured vote gas=${voteReceipt.gasUsed}`);
+  return { proposalId, registryAddr };
 }
 
 async function main() {
@@ -143,17 +150,37 @@ async function main() {
   ctx.admin = signers[0];
   ctx.voter = signers[1];
 
+  const proposalsByCondition = {};
   for (const variant of VARIANTS) {
     console.log(`\n=== ${variant} — P1 ===`);
     for (const k of [1, 2, 4, 8, 16]) {
       console.log(`--- k=${k} ---`);
-      await runP1(ctx, variant, k);
+      const { proposalId, registryAddr } = await runP1(ctx, variant, k);
+      const key = `P1-k${k}`;
+      proposalsByCondition[key] = proposalsByCondition[key] || {};
+      proposalsByCondition[key][variant] = { proposalId: proposalId.toString(), registryAddr };
     }
     console.log(`\n=== ${variant} — P2 ===`);
     for (const k of [2, 4, 8, 16]) {
       console.log(`--- k=${k} ---`);
-      await runP2(ctx, variant, k);
+      const { proposalId, registryAddr } = await runP2(ctx, variant, k);
+      const key = `P2-k${k}`;
+      proposalsByCondition[key] = proposalsByCondition[key] || {};
+      proposalsByCondition[key][variant] = { proposalId: proposalId.toString(), registryAddr };
     }
+  }
+
+  for (const [key, byVariant] of Object.entries(proposalsByCondition)) {
+    const variantsPresent = Object.keys(byVariant);
+    const ids = variantsPresent.map((v) => byVariant[v].proposalId);
+    const allSame = ids.every((id) => id === ids[0]);
+    recordQuery(ctx, {
+      etapa: "check_proposalId_matches_across_variants", variante: variantsPresent.join("+"), condicao: key,
+      query: "proposalId compared across every variant run for this (posicao,k)",
+      expected: `all equal (${variantsPresent.join(",")})`,
+      actual: allSame ? ids[0] : JSON.stringify(byVariant),
+      ok: allSame,
+    });
   }
 
   verifyIntegrity(ctx);
@@ -162,7 +189,7 @@ async function main() {
   ctx.manifest.quorumByVariant = {
     V1: { model: "none" },
     V2: { model: "fixed", supply: SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
-    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
+    Ref: { model: "fraction-of-supply (initial value 4%, set via GovernorVotesQuorumFraction(4) in CircularDAO's constructor; changeable later only through a passed governance proposal calling updateQuorumNumerator() — untouched in this run, so still 4% throughout)", supply: SUPPLY.toString(), effectiveQuorum: (SUPPLY * 4n / 100n).toString() },
   };
   ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));

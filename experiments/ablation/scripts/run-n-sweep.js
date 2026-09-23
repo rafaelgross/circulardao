@@ -1,9 +1,11 @@
 // Runner for protocol section 5.1: N in {1,2,4,8,16,32,50}, composition
 // conditions A-unanime / A-maioria / D-voto / E-empate, across V0/V1/V2/Ref.
 //
-// Ref exclusion: Ref's quorum is a fixed 4% of ITS OWN token's total supply
-// (hardcoded in CircularDAO's constructor, confirmed by reading the source —
-// see the note in run-b1-b4.js). To keep Ref's quorum at exactly 4,000
+// Ref exclusion: Ref's quorum is 4% of ITS OWN token's total supply, set at
+// construction via GovernorVotesQuorumFraction(4) (confirmed by reading the
+// source — see the note in run-b1-b4.js; OpenZeppelin's updateQuorumNumerator()
+// could change this later via a passed proposal, but nothing here ever calls
+// it, so it stays 4% throughout). To keep Ref's quorum at exactly 4,000
 // (matching V2's fixed threshold and the real Sepolia deployment), Ref's
 // token supply is fixed at 100,000, same as the B1-B4 tier. N=32 (128,000
 // tokens needed) and N=50 (200,000) do not fit in that supply, so Ref is
@@ -82,8 +84,14 @@ async function runOne(ctx, variant, N, condicao) {
 
   const registryAddr = await registry.getAddress();
   const calldata = registry.interface.encodeFunctionData("updateCredits", [1, 555]);
-  // Fixed, deterministic description (v1.4 step 1) — no Date.now()/Math.random()/runId; safe for the same reason documented in run-b1-b4.js (hashProposal excludes the governor address, but each combination deploys its own fresh governor).
-  const description = `ablation-v1.4-5.1-${condicao}-N${N}-${variant}`;
+  // Fixed, deterministic description (v1.4 step 1) — no Date.now()/Math.random()/runId,
+  // and deliberately NOT parameterized by `variant` either (v1.4 step 1 correction):
+  // the same description/calldata is used for all four variants of the same (N,condicao),
+  // so their proposalIds are byte-identical too (asserted in main(), not just described text) —
+  // targets match because deployCondition() deploys token then registry at the SAME nonce
+  // position for every variant (CREATE addresses depend only on sender+nonce, not variant),
+  // so all four variants' registry ends up at the same address after a reset.
+  const description = `ablation-v1.4-5.1-${condicao}-N${N}`;
   const proposeReceipt = await step(ctx, { variante: variant, etapa: "propose", condicao, N, funcao: "propose", operacao_governada: "WasteCategoryRegistry.updateCredits" },
     () => governor.connect(ctx.admin).propose([registryAddr], [0], [calldata], description));
   const created = proposeReceipt.logs.map((l) => { try { return governor.interface.parseLog(l); } catch { return null; } })
@@ -132,6 +140,8 @@ async function runOne(ctx, variant, N, condicao) {
       () => governor.execute([registryAddr], [0], [calldata], ethers.id(description), { gasLimit: 300000 }),
       { expectRevert: true, decodeFn: () => governor.execute.staticCall([registryAddr], [0], [calldata], ethers.id(description)) });
   }
+
+  return { proposalId, registryAddr };
 }
 
 async function main() {
@@ -141,6 +151,7 @@ async function main() {
   ctx.admin = ctx.signers[0];
 
   let planned = 0, ran = 0, skipped = 0;
+  const proposalsByCondition = {};
   for (const N of Ns) {
     for (const condicao of applicableConditions(N)) {
       for (const variant of ["V0", "V1", "V2", "Ref"]) {
@@ -151,9 +162,25 @@ async function main() {
           continue;
         }
         console.log(`\n=== N=${N} ${condicao} ${variant} ===`);
-        await runOne(ctx, variant, N, condicao);
+        const { proposalId, registryAddr } = await runOne(ctx, variant, N, condicao);
+        proposalsByCondition[`${N}-${condicao}`] = proposalsByCondition[`${N}-${condicao}`] || {};
+        proposalsByCondition[`${N}-${condicao}`][variant] = { proposalId: proposalId.toString(), registryAddr };
         ran++;
       }
+    }
+
+    for (const condicao of applicableConditions(N)) {
+      const byVariant = proposalsByCondition[`${N}-${condicao}`];
+      const variantsPresent = Object.keys(byVariant);
+      const ids = variantsPresent.map((v) => byVariant[v].proposalId);
+      const allSame = ids.every((id) => id === ids[0]);
+      recordQuery(ctx, {
+        etapa: "check_proposalId_matches_across_variants", variante: variantsPresent.join("+"), condicao: `${condicao}-N${N}`,
+        query: "proposalId (hashProposal over targets/values/calldatas/descriptionHash) compared across every variant run for this (N,condicao)",
+        expected: `all equal (${variantsPresent.length} variant(s): ${variantsPresent.join(",")})`,
+        actual: allSame ? ids[0] : JSON.stringify(byVariant),
+        ok: allSame,
+      });
     }
   }
 
@@ -164,7 +191,7 @@ async function main() {
   ctx.manifest.quorumByVariant = {
     V0: { model: "none" }, V1: { model: "none" },
     V2: { model: "fixed", supply: MAIN_SUPPLY.toString(), effectiveQuorum: V2_QUORUM.toString() },
-    Ref: { model: "fraction-of-supply (4%, hardcoded in CircularDAO's constructor)", supply: REF_SUPPLY.toString(), effectiveQuorum: (REF_SUPPLY * 4n / 100n).toString() },
+    Ref: { model: "fraction-of-supply (initial value 4%, set via GovernorVotesQuorumFraction(4) in CircularDAO's constructor; changeable later only through a passed governance proposal calling updateQuorumNumerator() — untouched in this run, so still 4% throughout)", supply: REF_SUPPLY.toString(), effectiveQuorum: (REF_SUPPLY * 4n / 100n).toString() },
   };
   ctx.manifest.calibrationStrategy = "n/a — this run does not compare against Sepolia";
   require("fs").writeFileSync(require("path").join(ctx.outDir, "manifest.json"), JSON.stringify(ctx.manifest, null, 2));

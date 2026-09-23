@@ -58,14 +58,27 @@ function newRun(label) {
       solidity: { version: "0.8.28", optimizer: { enabled: true, runs: 200 }, viaIR: true, evmVersion: "cancun" },
       // Read from the actual running config instead of a hardcoded literal —
       // an earlier version of this file hardcoded "cancun" here even after
-      // hardhat.config.ablation.js was changed to "osaka" to match Sepolia's
-      // real hardfork at the calibration block, silently making the record
-      // wrong. hre.network.config.hardfork is undefined when this runs under
-      // hardhat.config.ablation-fork.js (forking derives rules from the
-      // remote chain, not a hardfork literal) — recorded as such, not guessed.
-      hardfork: hre.network.config.hardfork || "(forked network — rules taken from remote chain state, no local hardfork literal)",
+      // hardhat.config.ablation.js was changed to "osaka", silently making
+      // the record wrong. hre.network.config.hardfork is undefined when this
+      // runs under hardhat.config.ablation-fork.js (forking derives rules
+      // from Hardhat's own bundled per-chain activation table for the
+      // forked chain ID, not a hardfork literal) — recorded as such, not
+      // guessed.
+      hardfork: hre.network.config.hardfork || "(forked network — rules resolved from Hardhat's bundled per-chain hardfork history for the forked chain ID, not a local hardfork literal)",
       network: hre.network.name,
       forking: hre.network.config.forking ? { url: hre.network.config.forking.url, blockNumber: hre.network.config.forking.blockNumber } : null,
+      // v1.4 correction item 4: does this run's hardfork match the
+      // calibration fork's? They resolve through DIFFERENT mechanisms (this
+      // one from an explicit/default `hardfork` literal when not forking;
+      // the calibration fork from Sepolia's bundled activation table), so
+      // "same name" can't be asserted from config alone. What WAS checked
+      // directly: running this project's own operations (token deploy,
+      // delegate, transfer, propose, castVote) under hardfork "osaka" vs.
+      // "prague" on the non-forked network produced byte-identical gas for
+      // every one of them — so even if the two networks resolve to different
+      // hardfork names, it has no measured effect on any figure in this
+      // study. See hardhat.config.ablation.js for that check.
+      hardforkConsistencyNote: "checked directly (not assumed): osaka vs. prague produce identical gas for every operation type this study measures — see hardhat.config.ablation.js",
       openzeppelinVersion: require(path.join(__dirname, "..", "..", "..", "node_modules", "@openzeppelin", "contracts", "package.json")).version,
       deployments: [], // filled in by deployCondition()
     },
@@ -76,7 +89,7 @@ function newRun(label) {
   return ctx;
 }
 
-const CSV_HEADER = ["execucao", "variante", "token", "N", "condicao", "posicao", "k", "etapa", "ordem", "direcao", "funcao", "seletor", "operacao_governada", "gas", "status", "motivo_reversao", "tx_hash"];
+const CSV_HEADER = ["execucao", "variante", "token", "N", "condicao", "posicao", "k", "etapa", "ordem", "direcao", "funcao", "seletor", "operacao_governada", "gas", "status", "motivo_reversao", "tx_hash", "segmento_rede"];
 
 function flush(ctx) {
   const csv = [CSV_HEADER.join(",")]
@@ -136,6 +149,7 @@ function recordTx(ctx, receipt, meta, tx = null) {
     status: receipt.status,
     motivo_reversao: meta.motivo_reversao ?? "",
     tx_hash: receipt.hash,
+    segmento_rede: ctx.resetSeq,
   });
   flush(ctx);
 }
