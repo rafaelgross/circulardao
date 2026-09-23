@@ -1,0 +1,584 @@
+{
+  "runId": "2026-09-23T18-53-37-554Z_checkpoint-history",
+  "label": "checkpoint-history",
+  "kind": "result",
+  "startedAt": "2026-09-23T18:53:37.619Z",
+  "git": {
+    "commit": "ca49f2e36f690be86b83dbdf323cded0778bafb9",
+    "tag": "v1.1-ablation-study",
+    "isResultRun": true,
+    "dirtyAtRunTime": false
+  },
+  "solidity": {
+    "version": "0.8.28",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "cancun"
+  },
+  "hardfork": "cancun",
+  "openzeppelinVersion": "5.6.1",
+  "deployments": [
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "registry": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        "governor": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+        "registry": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+        "governor": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+        "registry": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+        "governor": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+        "registry": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+        "governor": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF",
+        "registry": "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
+        "governor": "0x9d4454B023096f34B160D6B654540c56A1F81688"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
+        "registry": "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6",
+        "governor": "0x04C89607413713Ec9775E14b954286519d836FEf"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+        "registry": "0x36b58F5C1969B7b6591D752ea6F5486D069010AB",
+        "governor": "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5",
+        "registry": "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
+        "governor": "0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V1",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
+        "registry": "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
+        "governor": "0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3"
+      },
+      "governorContract": "V1Governor",
+      "constructorArgs": [
+        "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x3347B4d90ebe72BeFb30444C9966B2B990aE9FcB",
+        "registry": "0x3155755b79aA083bd953911C92705B7aA82a18F9",
+        "governor": "0x5bf5b11053e734690269C6B9D438F8C9d48F528A"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x3347B4d90ebe72BeFb30444C9966B2B990aE9FcB",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x457cCf29090fe5A24c19c1bc95F492168C0EaFdb",
+        "registry": "0x525C7063E7C20997BaaE9bDa922159152D0e8417",
+        "governor": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x457cCf29090fe5A24c19c1bc95F492168C0EaFdb",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0xF32D39ff9f6Aa7a7A64d7a4F00a54826Ef791a55",
+        "registry": "0xd6e1afe5cA8D00A2EFC01B89997abE2De47fdfAf",
+        "governor": "0x99dBE4AEa58E518C50a1c04aE9b48C9F6354612f"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0xF32D39ff9f6Aa7a7A64d7a4F00a54826Ef791a55",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x927b167526bAbB9be047421db732C663a0b77B11",
+        "registry": "0x32EEce76C2C2e8758584A83Ee2F522D4788feA0f",
+        "governor": "0x01c1DeF3b91672704716159C9041Aeca392DdFfb"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x927b167526bAbB9be047421db732C663a0b77B11",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0xefc1aB2475ACb7E60499Efb171D173be19928a05",
+        "registry": "0x870526b7973b56163a6997bB7C886F5E4EA53638",
+        "governor": "0xD49a0e9A4CD5979aE36840f542D2d7f02C4817Be"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0xefc1aB2475ACb7E60499Efb171D173be19928a05",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x02df3a3F960393F5B349E40A599FEda91a7cc1A7",
+        "registry": "0x821f3361D454cc98b7555221A06Be563a7E2E0A6",
+        "governor": "0x1780bCf4103D3F501463AD3414c7f4b654bb7aFd"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x02df3a3F960393F5B349E40A599FEda91a7cc1A7",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x12Bcb546bC60fF39F1Adfc7cE4605d5Bd6a6A876",
+        "registry": "0xaC47e91215fb80462139756f43438402998E4A3a",
+        "governor": "0x9BcC604D4381C5b0Ad12Ff3Bf32bEdE063416BC7"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x12Bcb546bC60fF39F1Adfc7cE4605d5Bd6a6A876",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x56D13Eb21a625EdA8438F55DF2C31dC3632034f5",
+        "registry": "0xE8addD62feD354203d079926a8e563BC1A7FE81e",
+        "governor": "0xe039608E695D21aB11675EBBA00261A0e750526c"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x56D13Eb21a625EdA8438F55DF2C31dC3632034f5",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "V2",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": "4000000000000000000000",
+      "addresses": {
+        "token": "0x139e1D41943ee15dDe4DF876f9d0E7F85e26660A",
+        "registry": "0xAdE429ba898c34722e722415D722A70a297cE3a2",
+        "governor": "0x7B4f352Cd40114f12e82fC675b5BA8C7582FC513"
+      },
+      "governorContract": "V2Governor",
+      "constructorArgs": [
+        "0x139e1D41943ee15dDe4DF876f9d0E7F85e26660A",
+        20,
+        20,
+        "4000000000000000000000"
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xcD0048A5628B37B8f743cC2FeA18817A29e97270",
+        "registry": "0x976C214741b4657bd99DFD38a5c0E3ac5C99D903",
+        "governor": "0xc7cDb7A2E5dDa1B7A0E792Fe1ef08ED20A6F56D4"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0xcD0048A5628B37B8f743cC2FeA18817A29e97270",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x976C214741b4657bd99DFD38a5c0E3ac5C99D903",
+        "0xcC4c41415fc68B2fBf70102742A83cDe435e0Ca7",
+        "0xa722bdA6968F50778B973Ae2701e90200C564B49",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x6A59CC73e334b018C9922793d96Df84B538E6fD5",
+        "registry": "0xC1e0A9DB9eA830c52603798481045688c8AE99C2",
+        "governor": "0xAe120F0df055428E45b264E7794A18c54a2a3fAF"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0x6A59CC73e334b018C9922793d96Df84B538E6fD5",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0xC1e0A9DB9eA830c52603798481045688c8AE99C2",
+        "0x71a0b8A2245A9770A4D887cE1E4eCc6C1d4FF28c",
+        "0xb185E9f6531BA9877741022C92CE858cDCc5760E",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x547382C0D1b23f707918D3c83A77317B71Aa8470",
+        "registry": "0x7C8BaafA542c57fF9B2B90612bf8aB9E86e22C09",
+        "governor": "0x95775fD3Afb1F4072794CA4ddA27F2444BCf8Ac3"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0x547382C0D1b23f707918D3c83A77317B71Aa8470",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x7C8BaafA542c57fF9B2B90612bf8aB9E86e22C09",
+        "0x0Dd99d9f56A14E9D53b2DdC62D9f0bAbe806647A",
+        "0xeAd789bd8Ce8b9E94F5D0FCa99F8787c7e758817",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xe38b6847E611e942E6c80eD89aE867F522402e80",
+        "registry": "0x2c8ED11fd7A058096F2e5828799c68BE88744E2F",
+        "governor": "0xCd7c00Ac6dc51e8dCc773971Ac9221cC582F3b1b"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0xe38b6847E611e942E6c80eD89aE867F522402e80",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x2c8ED11fd7A058096F2e5828799c68BE88744E2F",
+        "0x975Ab64F4901Af5f0C96636deA0b9de3419D0c2F",
+        "0x4593ed9CbE6003e687e5e77368534bb04b162503",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x3fdc08D815cc4ED3B7F69Ee246716f2C8bCD6b07",
+        "registry": "0x286B8DecD5ED79c962b2d8F4346CD97FF0E2C352",
+        "governor": "0x7Cf4be31f546c04787886358b9486ca3d62B9acf"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0x3fdc08D815cc4ED3B7F69Ee246716f2C8bCD6b07",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x286B8DecD5ED79c962b2d8F4346CD97FF0E2C352",
+        "0x9338CA7d556248055f5751d85cDA7aD6eF254433",
+        "0x9c65f85425c619A6cB6D29fF8d57ef696323d188",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xd753c12650c280383Ce873Cc3a898F6f53973d16",
+        "registry": "0xd710a67624Ad831683C86a48291c597adE30F787",
+        "governor": "0x2e8880cAdC08E9B438c6052F5ce3869FBd6cE513"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0xd753c12650c280383Ce873Cc3a898F6f53973d16",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0xd710a67624Ad831683C86a48291c597adE30F787",
+        "0x00CAC06Dd0BB4103f8b62D280fE9BCEE8f26fD59",
+        "0x4951A1C579039EbfCBA0BE33D2cd3A6D30b0f802",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xFD6D23eE2b6b136E34572fc80cbCd33E9787705e",
+        "registry": "0x4DAf17c8142A483B2E2348f56ae0F2cFDAe22ceE",
+        "governor": "0x76cec9299B6Fa418dc71416FF353737AB7933A7D"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0xFD6D23eE2b6b136E34572fc80cbCd33E9787705e",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x4DAf17c8142A483B2E2348f56ae0F2cFDAe22ceE",
+        "0x618fB9dbd2BD6eb968B4c1af36af6CB0b45310Ec",
+        "0xa779C1D17bC5230c07afdC51376CAC1cb3Dd5314",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005",
+        "registry": "0xB9d9e972100a1dD01cd441774b45b5821e136043",
+        "governor": "0xF66CfDf074D2FFD6A4037be3A669Ed04380Aef2B"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0xB9d9e972100a1dD01cd441774b45b5821e136043",
+        "0xdB05A386810c809aD5a77422eb189D36c7f24402",
+        "0xbf2ad38fd09F37f50f723E35dd84EEa1C282c5C9",
+        20,
+        20
+      ]
+    },
+    {
+      "variant": "Ref",
+      "tokenKind": "T1",
+      "supply": "100000000000000000000000",
+      "votingDelay": 20,
+      "votingPeriod": 20,
+      "quorumFixed": null,
+      "addresses": {
+        "token": "0x7A28cf37763279F774916b85b5ef8b64AB421f79",
+        "registry": "0x2BB8B93F585B43b06F3d523bf30C203d3B6d4BD4",
+        "governor": "0x124dDf9BdD2DdaD012ef1D5bBd77c00F05C610DA"
+      },
+      "governorContract": "CircularDAO",
+      "constructorArgs": [
+        "0x7A28cf37763279F774916b85b5ef8b64AB421f79",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "0x2BB8B93F585B43b06F3d523bf30C203d3B6d4BD4",
+        "0xCa57C1d3c2c35E667745448Fef8407dd25487ff8",
+        "0xc3023a2c9f7B92d1dd19F488AF6Ee107a78Df9DB",
+        20,
+        20
+      ]
+    }
+  ],
+  "finishedAt": "2026-09-23T18:54:05.938Z"
+}

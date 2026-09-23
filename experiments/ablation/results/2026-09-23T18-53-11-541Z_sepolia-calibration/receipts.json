@@ -1,0 +1,191 @@
+[
+  {
+    "hash": "0x8a423d158719dafa7ff4b82bcd6f6a5661f61c993e6aaede0acbe21a849af082",
+    "block": 1,
+    "gasUsed": "1621017",
+    "status": 1,
+    "etapa": "deploy_token_T1",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x9005486642112873086c0faf3a06ce7199e3377186a80eb6eea4235f5e1c6f56",
+    "block": 2,
+    "gasUsed": "4590964",
+    "status": 1,
+    "etapa": "deploy_registry",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x3be491f231e993ce72750c74a4f60295b52b091e45e0ca06cb2b1cb9e5d7d510",
+    "block": 8,
+    "gasUsed": "4434623",
+    "status": 1,
+    "etapa": "deploy_governor_Ref",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x9477ec21ceecb8e71e570a8e5c711d060981c6dc53217d4071b2c7d012604374",
+    "block": 9,
+    "gasUsed": "50799",
+    "status": 1,
+    "etapa": "grant_admin_role",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x4571f6b2b82c72e95dbfd028346a3c95cee362f1cdc4e946338a9d1e56d58c09",
+    "block": 10,
+    "gasUsed": "27116",
+    "status": 1,
+    "etapa": "revoke_deployer_admin_role",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xfca7f8e34a7a367a38495092e6c6ae53f6f6bbc6c6cdd047fed83c770b76a8c9",
+    "block": 11,
+    "gasUsed": "95559",
+    "status": 1,
+    "etapa": "delegate_admin",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x2f1db724527155bbb87015320f4de9a632dd20bb0d57eddcbd649b18207511a9",
+    "block": 12,
+    "gasUsed": "48347",
+    "status": 1,
+    "etapa": "delegate",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xf73818cab7bec22c2873568741ee5b205f7bcf739ff4a4e81e3c97b5f44fe6a7",
+    "block": 13,
+    "gasUsed": "135960",
+    "status": 1,
+    "etapa": "transfer",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xb14cd818d079768dd0b788aaa7eaa523d8b60a175adadb469b25983d014c7105",
+    "block": 14,
+    "gasUsed": "48335",
+    "status": 1,
+    "etapa": "delegate",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xbf8bb4e90ea492cc583c784c95702e6dff1d2ecb51ab3787750d7c3f73c61e3d",
+    "block": 15,
+    "gasUsed": "135948",
+    "status": 1,
+    "etapa": "transfer",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x7c89ad214f77116c026983997c1e0dd76549cf1f5576259e316d297c57768a6c",
+    "block": 16,
+    "gasUsed": "48347",
+    "status": 1,
+    "etapa": "delegate",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x95354546201ad7966109d62bfa41c854ebc432f0a74f68125a938ca586a18679",
+    "block": 17,
+    "gasUsed": "135960",
+    "status": 1,
+    "etapa": "transfer",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x02d627e7a4ebd349ddeb34b5c69cc513e18aa16b3e1da7f3963c9f67d6b36330",
+    "block": 18,
+    "gasUsed": "48347",
+    "status": 1,
+    "etapa": "delegate",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0xc30bedb18b8643513cd1d301a9cf22447101f5af7b9256407c967cf6fdebde94",
+    "block": 19,
+    "gasUsed": "135960",
+    "status": 1,
+    "etapa": "transfer",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x1d923ce0024dc951fa8753eca5be3afb68f83f44e84cb5b2db378d9e073ac350",
+    "block": 20,
+    "gasUsed": "681935",
+    "status": 1,
+    "etapa": "propose",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x47054ee10a28344ba657ec9abf9fd41a4c5ab374632ec08ceb230a8f6e790bda",
+    "block": 23,
+    "gasUsed": "83086",
+    "status": 1,
+    "etapa": "vote_for_1",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x7e89b37a2c242cfd08489a53eb614b415bf34f5bc9f11fcdb697326af56bb247",
+    "block": 24,
+    "gasUsed": "65986",
+    "status": 1,
+    "etapa": "vote_for_2",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x79228e4382d9e658695ba5ac375eb928ba5f030740bf0779bf3a9f44d084bff4",
+    "block": 25,
+    "gasUsed": "65986",
+    "status": 1,
+    "etapa": "vote_for_3",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x730bbfdc59169b6c205a0bc8b77d5781c91214c1a89f80a40bb0fbfd5c80f5b5",
+    "block": 26,
+    "gasUsed": "83045",
+    "status": 1,
+    "etapa": "vote_against",
+    "variante": "Ref",
+    "revertReason": ""
+  },
+  {
+    "hash": "0x5523b2e9a30f531fc1b97a19d3fad2245fd913ff36ea5287163b6b08e751e263",
+    "block": 27,
+    "gasUsed": "37926",
+    "status": 0,
+    "etapa": "repeated_vote",
+    "variante": "Ref",
+    "revertReason": "VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote(\"0x70997970C51812dc3A010C7d01b50e0d17dc79C8\")'"
+  },
+  {
+    "hash": "0x0536112ee9c96176eda5ef4181b5048c4ee1f3b4cefa043cb8fa472d1d9c3dc0",
+    "block": 89,
+    "gasUsed": "397771",
+    "status": 1,
+    "etapa": "execute",
+    "variante": "Ref",
+    "revertReason": ""
+  }
+]
