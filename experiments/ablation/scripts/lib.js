@@ -13,7 +13,13 @@ function gitInfo() {
   const run = (cmd) => { try { return execSync(cmd, { cwd: root }).toString().trim(); } catch { return null; } };
   const commit = run("git rev-parse HEAD");
   const tag = run("git describe --exact-match --tags HEAD");
-  const dirty = run("git status --porcelain");
+  // Exclude experiments/ablation/results/: every run writes its own output
+  // folder there, which makes the tree "dirty" for the NEXT script in the
+  // same batch even though no CODE changed — caught by hand when 4 of 5
+  // scripts in one tagged batch mislabeled themselves "development" because
+  // an earlier script's own output was sitting there untracked. Excluding
+  // this path means dirty only reflects actual source/config changes.
+  const dirty = run("git status --porcelain -- . ':!experiments/ablation/results'");
   return {
     commit,
     tag, // null if HEAD isn't exactly on a tag
