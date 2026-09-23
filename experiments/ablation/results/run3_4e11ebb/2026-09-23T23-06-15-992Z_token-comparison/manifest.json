@@ -1,0 +1,35 @@
+{
+  "runId": "2026-09-23T23-06-15-992Z_token-comparison",
+  "label": "token-comparison",
+  "protocolVersion": "1.4",
+  "kind": "result",
+  "startedAt": "2026-09-23T23:06:16.033Z",
+  "git": {
+    "commit": "4e11ebbbe9f2a1fdeafb86d8f148be08bba06ffb",
+    "tag": "ablation-protocol-1.4.1",
+    "isResultRun": true,
+    "dirtyAtRunTime": false
+  },
+  "solidity": {
+    "version": "0.8.28",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "evmVersion": "cancun"
+  },
+  "hardfork": "osaka",
+  "network": "hardhat",
+  "forking": null,
+  "hardforkConsistencyNote": "checked directly (not assumed): osaka vs. prague produce identical gas for every operation type this study measures — see hardhat.config.ablation.js",
+  "openzeppelinVersion": "5.6.1",
+  "deployments": [
+    {
+      "token": "T0",
+      "supply": "100000000000000000000000",
+      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    }
+  ],
+  "finishedAt": "2026-09-23T23:06:20.493Z"
+}
