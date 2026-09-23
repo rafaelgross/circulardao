@@ -1,0 +1,380 @@
+[
+  {
+    "etapa": "check_weight_at_activation",
+    "variante": "V0",
+    "condicao": "B1",
+    "query": "governor.getVotes(acquirer, snapshot)",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_tally_movement",
+    "variante": "V0",
+    "condicao": "B1",
+    "query": "proposalVotes(id).forVotes delta after post-snapshot transfer+vote",
+    "expected": "20000000000000000000000",
+    "actual": "20000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V0",
+    "condicao": "B2",
+    "query": "governor.state(id)",
+    "expected": "Succeeded",
+    "actual": "Succeeded",
+    "ok": true
+  },
+  {
+    "etapa": "check_executed_effect",
+    "variante": "V0",
+    "condicao": "B2",
+    "query": "registry.getCategory(1).creditsPerKg",
+    "expected": "222",
+    "actual": "222",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V0",
+    "condicao": "B3",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V0",
+    "condicao": "B3",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "63000000000000000000000",
+    "actual": "63000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V0",
+    "condicao": "B3",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V0",
+    "condicao": "B3",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_first_vote_succeeded",
+    "variante": "V0",
+    "condicao": "B4",
+    "query": "firstReceipt.status",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_repeat",
+    "variante": "V0",
+    "condicao": "B4",
+    "query": "governor.state(id) before repeat attempt",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_repeat_reason",
+    "variante": "V0",
+    "condicao": "B4",
+    "query": "decoded revert reason of repeat castVote",
+    "expected": "GovernorAlreadyCastVote",
+    "actual": "VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote(\"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\")'",
+    "ok": true
+  },
+  {
+    "etapa": "check_weight_at_activation",
+    "variante": "V1",
+    "condicao": "B1",
+    "query": "governor.getVotes(acquirer, snapshot)",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_tally_movement",
+    "variante": "V1",
+    "condicao": "B1",
+    "query": "proposalVotes(id).forVotes delta after post-snapshot transfer+vote",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V1",
+    "condicao": "B2",
+    "query": "governor.state(id)",
+    "expected": "Succeeded",
+    "actual": "Succeeded",
+    "ok": true
+  },
+  {
+    "etapa": "check_executed_effect",
+    "variante": "V1",
+    "condicao": "B2",
+    "query": "registry.getCategory(1).creditsPerKg",
+    "expected": "222",
+    "actual": "222",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V1",
+    "condicao": "B3",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V1",
+    "condicao": "B3",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "63000000000000000000000",
+    "actual": "63000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V1",
+    "condicao": "B3",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V1",
+    "condicao": "B3",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_first_vote_succeeded",
+    "variante": "V1",
+    "condicao": "B4",
+    "query": "firstReceipt.status",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_repeat",
+    "variante": "V1",
+    "condicao": "B4",
+    "query": "governor.state(id) before repeat attempt",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_repeat_reason",
+    "variante": "V1",
+    "condicao": "B4",
+    "query": "decoded revert reason of repeat castVote",
+    "expected": "GovernorAlreadyCastVote",
+    "actual": "VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote(\"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\")'",
+    "ok": true
+  },
+  {
+    "etapa": "check_weight_at_activation",
+    "variante": "V2",
+    "condicao": "B1",
+    "query": "governor.getVotes(acquirer, snapshot)",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_tally_movement",
+    "variante": "V2",
+    "condicao": "B1",
+    "query": "proposalVotes(id).forVotes delta after post-snapshot transfer+vote",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V2",
+    "condicao": "B2",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "V2",
+    "condicao": "B3",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "V2",
+    "condicao": "B3",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "63000000000000000000000",
+    "actual": "63000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "V2",
+    "condicao": "B3",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "V2",
+    "condicao": "B3",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_first_vote_succeeded",
+    "variante": "V2",
+    "condicao": "B4",
+    "query": "firstReceipt.status",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_repeat",
+    "variante": "V2",
+    "condicao": "B4",
+    "query": "governor.state(id) before repeat attempt",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_repeat_reason",
+    "variante": "V2",
+    "condicao": "B4",
+    "query": "decoded revert reason of repeat castVote",
+    "expected": "GovernorAlreadyCastVote",
+    "actual": "VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote(\"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\")'",
+    "ok": true
+  },
+  {
+    "etapa": "check_weight_at_activation",
+    "variante": "Ref",
+    "condicao": "B1",
+    "query": "governor.getVotes(acquirer, snapshot)",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_tally_movement",
+    "variante": "Ref",
+    "condicao": "B1",
+    "query": "proposalVotes(id).forVotes delta after post-snapshot transfer+vote",
+    "expected": "0",
+    "actual": "0",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "Ref",
+    "condicao": "B2",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_for_votes",
+    "variante": "Ref",
+    "condicao": "B3",
+    "query": "proposalVotes(id).forVotes",
+    "expected": "12000000000000000000000",
+    "actual": "12000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_against_votes",
+    "variante": "Ref",
+    "condicao": "B3",
+    "query": "proposalVotes(id).againstVotes",
+    "expected": "63000000000000000000000",
+    "actual": "63000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_quorum_met_by_for_alone",
+    "variante": "Ref",
+    "condicao": "B3",
+    "query": "forVotes >= governor.quorum(snapshot)",
+    "expected": "true",
+    "actual": "true",
+    "ok": true
+  },
+  {
+    "etapa": "check_state",
+    "variante": "Ref",
+    "condicao": "B3",
+    "query": "governor.state(id)",
+    "expected": "Defeated",
+    "actual": "Defeated",
+    "ok": true
+  },
+  {
+    "etapa": "check_first_vote_succeeded",
+    "variante": "Ref",
+    "condicao": "B4",
+    "query": "firstReceipt.status",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_repeat",
+    "variante": "Ref",
+    "condicao": "B4",
+    "query": "governor.state(id) before repeat attempt",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_repeat_reason",
+    "variante": "Ref",
+    "condicao": "B4",
+    "query": "decoded revert reason of repeat castVote",
+    "expected": "GovernorAlreadyCastVote",
+    "actual": "VM Exception while processing transaction: reverted with custom error 'GovernorAlreadyCastVote(\"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\")'",
+    "ok": true
+  }
+]

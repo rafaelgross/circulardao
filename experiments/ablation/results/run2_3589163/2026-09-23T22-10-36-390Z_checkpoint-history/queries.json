@@ -1,0 +1,596 @@
+[
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P1-k1",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P1-k1",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P1-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P1-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P1-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P1-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P1-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P1-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P1-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P1-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P2-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V1",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P2-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V1",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P2-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V1",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V1",
+    "condicao": "5.2-P2-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V1",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V1",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P1-k1",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P1-k1",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P1-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P1-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P1-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P1-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P1-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P1-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P1-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P1-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P2-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V2",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P2-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V2",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P2-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V2",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "V2",
+    "condicao": "5.2-P2-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "V2",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "V2",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k1",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "1",
+    "actual": "1",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k1",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P1-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k2",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "2",
+    "actual": "2",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k2",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k4",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "4",
+    "actual": "4",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k4",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k8",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "8",
+    "actual": "8",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k8",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  },
+  {
+    "etapa": "check_numCheckpoints",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k16",
+    "query": "token.numCheckpoints(voter)",
+    "expected": "16",
+    "actual": "16",
+    "ok": true
+  },
+  {
+    "etapa": "check_pastVotes",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.getVotes(voter, snapshot)",
+    "expected": "4000000000000000000000",
+    "actual": "4000000000000000000000",
+    "ok": true
+  },
+  {
+    "etapa": "check_state_before_vote",
+    "variante": "Ref",
+    "condicao": "5.2-P2-k16",
+    "query": "governor.state(id) before measured vote",
+    "expected": "Active",
+    "actual": "Active",
+    "ok": true
+  }
+]
