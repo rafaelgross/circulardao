@@ -1,15 +1,13 @@
 {
   "network": "sepolia",
   "deployer": "0xF44c9Fe8A1f0fF317225E06d59065bfb25442701",
-  "GovernanceToken_DAOG": "0x80bFcF2571fbc23E9021825Fe931CC056D0B086b",
-  "StakeholderRegistry": "0xa8c2C5317ADeb4ce64a1333dbF395753bb746692",
-  "WasteCategoryRegistry": "0x744ac71261622217f872DaE3837830d0AEF55B64",
-  "MaterialPassport": "0x59c59CFdB1baD36544915Ed89982eb67764a1eC0",
-  "CircularCredit_CRC": "0x52e5e78c71ebfcE8ea0b58B6de41492b0F4BEb51",
-  "RecyclingRewards": "0xE96E45E86255fa1923eBDb7a777f5042240Ddf1e",
-  "WasteTracker": "0x6841fB88034ed61Ab953426E73aa633c0C461F26",
-  "CircularDAO": "0x3c8a8950d88ff2D6c30F9d4c1348DC06E2616C12",
-  "deployedAt": "2026-06-11T17:29:01.280Z",
-  "CircularDAO_v1_7dias": "0xc8e2074255F9ce30bc977C2a25BD5a12F667B54F",
-  "note": "CircularDAO republicado em 2026-07-10 com votingDelay/votingPeriod parametrizados (1, 60) para o experimento da Secao 6.2; v1 (50400 blocos) preservada acima."
+  "GovernanceToken_DAOG": "0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020",
+  "StakeholderRegistry": "0xB0d8f974c4fb76BF4cE54Ea088409C79e9119CA1",
+  "WasteCategoryRegistry": "0x329615cE2142A6bae05691144d0bEaEd4c014D6a",
+  "MaterialPassport": "0x3a263ebB25522967B0D21dd0B36285d16fcB18A1",
+  "CircularCredit_CRC": "0xe3c293D981b751Fda04c3740DE3C9677160Ea378",
+  "RecyclingRewards": "0x64Eb1b9daA96029454E687C63C084B8a6dcb3CB7",
+  "WasteTracker": "0xc9521851E58173B5110B95CAd2acDC5496c8fd0f",
+  "CircularDAO": "0xB72737A3D35c00Afa8e2ff0Ba435eE635Ee66767",
+  "deployedAt": "2026-09-22T23:51:01.803Z"
 }

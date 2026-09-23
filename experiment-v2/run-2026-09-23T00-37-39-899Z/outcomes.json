@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "runId": "2026-09-23T00-37-39-899Z",
+    "chainId": "11155111",
+    "governor": "0xB72737A3D35c00Afa8e2ff0Ba435eE635Ee66767",
+    "token": "0x1fe6C81a52033BA4A2db34d82aBfDa77d88eb020",
+    "registry": "0x329615cE2142A6bae05691144d0bEaEd4c014D6a",
+    "deployer": "0xF44c9Fe8A1f0fF317225E06d59065bfb25442701",
+    "gitCommit": "cec100ce69e410d721c9df4cc0db124071255646",
+    "startedAt": "2026-09-23T00:37:40.527Z",
+    "quorum": "4000",
+    "votingPeriod": "60",
+    "decimals": 18,
+    "allValid": true,
+    "finishedAt": "2026-09-23T01:43:16.297Z"
+  },
+  "outcomes": [
+    {
+      "scenario": "S1",
+      "state": "Executed",
+      "reason": "Executed",
+      "quorumMet": true,
+      "voteSucceeded": true,
+      "forVotes": "12000",
+      "against": "4000",
+      "abstain": "0",
+      "quorum": "4000",
+      "proposalId": "78581396529558160011471414582223262541258530569221099492055806128138698319928",
+      "snapshot": "11761432",
+      "deadline": "11761492",
+      "executeHash": "0x6890c7dbbe4a1eaf7b65bb97a65a72466d4e8113c00e5cf1f467bd6fe655920c",
+      "valid": true,
+      "notes": [
+        "PASS: proposal reached Executed (got Executed)",
+        "PASS: registered category matches the proposed payload field-for-field"
+      ],
+      "registeredCategoryId": "14"
+    },
+    {
+      "scenario": "S6",
+      "valid": true,
+      "notes": [
+        "PASS: deployer does NOT hold WasteCategoryRegistry.ADMIN_ROLE post-deployment",
+        "PASS: direct updateCredits reverted (execution reverted)",
+        "PASS: self-regrant of ADMIN_ROLE reverted (execution reverted)",
+        "PASS: DAO path already proven working: S1 execute 0x6890c7dbbe4a1eaf7b65bb97a65a72466d4e8113c00e5cf1f467bd6fe655920c"
+      ],
+      "attempt1Hash": "0x0a9976db73415eedd1bbba5bd1b2a248d9a0a9a7a1ddfdf10170ab8c2b7263d7",
+      "attempt2Hash": "0xac8ba1c19cc169a7dbea0bbceee236bb4d24dfdd07d8e00254f9f9cc3bc13322",
+      "daoPathEvidenceHash": "0x6890c7dbbe4a1eaf7b65bb97a65a72466d4e8113c00e5cf1f467bd6fe655920c"
+    },
+    {
+      "scenario": "S2",
+      "state": "Defeated",
+      "reason": "RejectedByVote",
+      "quorumMet": true,
+      "voteSucceeded": false,
+      "forVotes": "4000",
+      "against": "12000",
+      "abstain": "0",
+      "quorum": "4000",
+      "proposalId": "92937503189695134359641047315454614626188386472197097387893499138912754104253",
+      "snapshot": "11761498",
+      "deadline": "11761558",
+      "valid": true,
+      "notes": [
+        "PASS: quorum was met (for+abstain vs quorum: 4000+0 vs 4000)",
+        "PASS: rejected by vote count, not by quorum (reason=RejectedByVote)",
+        "PASS: execute() on a defeated proposal reverted (execution reverted)"
+      ]
+    },
+    {
+      "scenario": "S3",
+      "state": "Defeated",
+      "reason": "RejectedByQuorum",
+      "quorumMet": false,
+      "voteSucceeded": true,
+      "forVotes": "1000",
+      "against": "0",
+      "abstain": "0",
+      "quorum": "4000",
+      "proposalId": "100941575917916703156346545083076831042268968725797738631357352216501474317670",
+      "snapshot": "11761562",
+      "deadline": "11761622",
+      "valid": true,
+      "notes": [
+        "PASS: quorum was NOT met despite unanimous support (reason=RejectedByQuorum)",
+        "PASS: rejected specifically for quorum, not vote count (reason=RejectedByQuorum)"
+      ]
+    },
+    {
+      "scenario": "S4",
+      "state": "Defeated",
+      "reason": "RejectedByQuorum",
+      "quorumMet": false,
+      "voteSucceeded": false,
+      "forVotes": "0",
+      "against": "4000",
+      "abstain": "0",
+      "quorum": "4000",
+      "proposalId": "70187855834678888899729088331345879312468988134097701004618681438087892708580",
+      "snapshot": "11761625",
+      "deadline": "11761685",
+      "attackerLiveBalance": "20000000000000000000000",
+      "attackerSnapshotWeight": "0",
+      "tallyMovedBy": "0",
+      "valid": true,
+      "notes": [
+        "PASS: attacker started from zero weight at the snapshot",
+        "PASS: post-snapshot acquisition carried zero voting weight (tally moved by 0)"
+      ]
+    },
+    {
+      "scenario": "S5",
+      "state": "Defeated",
+      "reason": "RejectedByVote",
+      "quorumMet": true,
+      "voteSucceeded": false,
+      "forVotes": "12000",
+      "against": "63000",
+      "abstain": "0",
+      "quorum": "4000",
+      "proposalId": "66976946095610937100107971746044372039734767575037372880460236682124360669755",
+      "snapshot": "11761688",
+      "deadline": "11761748",
+      "deployerWeight": "63000000000000000000000",
+      "threeVotersWeight": "12000000000000000000000",
+      "valid": true,
+      "notes": [
+        "PASS: quorum was met by the 3-wallet majority alone (reason=RejectedByVote)",
+        "PASS: a 3-to-1 wallet majority still lost on token weight (reason=RejectedByVote)"
+      ]
+    }
+  ]
+}

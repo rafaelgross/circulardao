@@ -105,6 +105,7 @@ contract MaterialPassport is ERC1155, ERC1155Burnable, AccessControl, Reentrancy
         require(bytes(p.externalProductId).length > 0, "Passport: productId vazio");
         require(p.weightKg > 0, "Passport: peso invalido");
         require(p.quantity > 0, "Passport: quantidade invalida");
+        require(externalIdToToken[p.externalProductId] == 0, "Passport: externalProductId ja registrado");
 
         tokenId = nextTokenId++;
 
@@ -153,6 +154,7 @@ contract MaterialPassport is ERC1155, ERC1155Burnable, AccessControl, Reentrancy
         require(pc.tokenId != 0, "Passport: nao encontrado");
 
         MaterialStatus old = pc.status;
+        require(_isValidTransition(old, newStatus), "Passport: transicao de estado invalida");
         pc.status      = newStatus;
         pc.lastUpdated = block.timestamp;
 
@@ -212,5 +214,24 @@ contract MaterialPassport is ERC1155, ERC1155Burnable, AccessControl, Reentrancy
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    /// @dev Espelha exatamente a máquina de estados que o WasteTracker impõe,
+    ///      função por função (registerCollection, registerTransit, ...), para
+    ///      que updateStatus() não vire um atalho que a ignora quando chamado
+    ///      direto por um endereço com OPERATOR_ROLE. Sem salto de etapa, sem
+    ///      retorno a estado anterior, sem repetição do mesmo estado.
+    ///      REJECTED e COMPOSTED não têm caminho de escrita hoje (nenhuma
+    ///      função os produz) e ficam de fora da tabela por isso — não é
+    ///      esquecimento, é o mesmo estado (ausência de transição) que já
+    ///      existia antes desta correção.
+    function _isValidTransition(MaterialStatus from, MaterialStatus to) internal pure returns (bool) {
+        if (from == MaterialStatus.REGISTERED)  return to == MaterialStatus.COLLECTED;
+        if (from == MaterialStatus.COLLECTED)   return to == MaterialStatus.IN_TRANSIT || to == MaterialStatus.TRIAGED;
+        if (from == MaterialStatus.IN_TRANSIT)  return to == MaterialStatus.TRIAGED;
+        if (from == MaterialStatus.TRIAGED)     return to == MaterialStatus.PROCESSING;
+        if (from == MaterialStatus.PROCESSING)  return to == MaterialStatus.RECYCLED;
+        if (from == MaterialStatus.RECYCLED)    return to == MaterialStatus.REINSERTED;
+        return false;
     }
 }

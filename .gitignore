@@ -2,12 +2,17 @@
 .env
 .env.*
 deployments/sepolia-experiment.json
+sepolia-wallets.json
 
 # Build do Hardhat
 node_modules/
 cache/
 artifacts/
 
+# Relatório bruto do Slither (5+ MB); SLITHER.md e slither-output.txt bastam como evidência
+security/slither-report.json
+
 # Diversos
 *.log
 .DS_Store
+deployments/hardhat.json

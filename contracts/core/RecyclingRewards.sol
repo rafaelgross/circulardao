@@ -26,6 +26,14 @@ contract RecyclingRewards is AccessControl, ReentrancyGuard {
     uint256 public bonusMultiplierBp = 10000; // 10000 = 1x, 12000 = 1.2x (20% bônus)
     uint256 public maxBonusMultiplierBp = 20000; // teto 2x
 
+    /// @dev Unidade canônica de peso em todo o sistema (MaterialPassport,
+    ///      WasteTracker) é gramas, apesar do nome dos campos ("weightKg").
+    ///      creditsPerKg é uma taxa por quilograma, então esta é a fronteira
+    ///      onde a conversão grama → quilograma precisa acontecer.
+    ///      Arredondamento: divisão inteira (trunca frações de centavo de
+    ///      crédito para baixo — nunca mintamos mais do que o peso justifica).
+    uint256 public constant GRAMS_PER_KG = 1000;
+
     // ─── Estado ───────────────────────────────────────────────────────
     mapping(uint256 => bool)    public rewardPaid;           // tokenId → pago
     mapping(address => uint256) public lifetimeEarnedByAddr; // créditos acumulados
@@ -72,14 +80,15 @@ contract RecyclingRewards is AccessControl, ReentrancyGuard {
     /// @notice Chamado pelo WasteTracker ao concluir reciclagem
     /// @param tokenId     Token ERC-1155 do passaporte
     /// @param recycler    Endereço que recebe os créditos
-    /// @param actualWeightKg Peso real reciclado (em kg — pode diferir do peso original)
+    /// @param actualWeightGrams Peso real reciclado, em gramas (pode diferir do peso original)
     function issueReward(
         uint256 tokenId,
         address recycler,
-        uint256 actualWeightKg
+        uint256 actualWeightGrams
     ) external nonReentrant onlyRole(TRACKER_ROLE) {
         require(!rewardPaid[tokenId], "Rewards: recompensa ja emitida");
         require(recycler != address(0), "Rewards: recycler invalido");
+        require(actualWeightGrams > 0, "Rewards: peso invalido");
 
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
@@ -90,10 +99,15 @@ contract RecyclingRewards is AccessControl, ReentrancyGuard {
         uint256 creditsPerKg = categoryRegistry.getCreditsPerKg(p.categoryId);
         require(creditsPerKg > 0, "Rewards: categoria sem pontuacao");
 
-        // Calcula créditos: peso × crédito/kg × bônus
-        // Lembrete: CRC tem 2 decimais → multiplicamos por 100 para escala
-        uint256 rawCredits = (actualWeightKg * creditsPerKg * 100) / 1; // base
-        uint256 finalCredits = (rawCredits * bonusMultiplierBp) / 10000;
+        // Créditos = peso(kg) × crédito/kg × bônus. CRC tem 2 decimais (×100),
+        // o peso de entrada está em gramas (÷1000 para kg), e o bônus é em
+        // pontos-base (÷10000). Uma única divisão no fim — multiplicar tudo
+        // primeiro e dividir por último — evita o arredondamento em dois
+        // passos que apareceria em (peso ÷1000) ×bônus ÷10000: quando o
+        // resultado do primeiro corte trunca, o bônus é aplicado sobre um
+        // valor já truncado, perdendo mais precisão do que o necessário.
+        uint256 finalCredits = (actualWeightGrams * creditsPerKg * 100 * bonusMultiplierBp)
+            / (GRAMS_PER_KG * 10000);
 
         rewardPaid[tokenId]              = true;
         lifetimeEarnedByAddr[recycler]  += finalCredits;
@@ -108,17 +122,18 @@ contract RecyclingRewards is AccessControl, ReentrancyGuard {
         );
         creditToken.mint(recycler, finalCredits, reason);
 
-        emit RewardIssued(tokenId, recycler, p.categoryId, actualWeightKg, finalCredits, reason);
+        emit RewardIssued(tokenId, recycler, p.categoryId, actualWeightGrams, finalCredits, reason);
     }
 
     // ─── Views ────────────────────────────────────────────────────────
 
     /// @notice Simula quanto crédito seria emitido para um passaporte
-    function previewReward(uint256 tokenId, uint256 weightKg) external view returns (uint256 credits) {
+    /// @param weightGrams Peso hipotético, em gramas (mesma unidade de issueReward)
+    function previewReward(uint256 tokenId, uint256 weightGrams) external view returns (uint256 credits) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         uint256 creditsPerKg = categoryRegistry.getCreditsPerKg(p.categoryId);
-        uint256 rawCredits   = weightKg * creditsPerKg * 100;
-        return (rawCredits * bonusMultiplierBp) / 10000;
+        // Single division at the end — see issueReward() for why.
+        return (weightGrams * creditsPerKg * 100 * bonusMultiplierBp) / (GRAMS_PER_KG * 10000);
     }
 
     function getRecyclerBalance(address recycler) external view returns (uint256) {

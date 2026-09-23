@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./WasteCategoryRegistry.sol";
+import "./RecyclingRewards.sol";
 import "../tokens/MaterialPassport.sol";
 
 /// @title WasteTracker — Rastreamento do Ciclo de Vida dos Resíduos
@@ -19,6 +20,7 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
     // ─── Referências ──────────────────────────────────────────────────
     WasteCategoryRegistry public categoryRegistry;
     MaterialPassport      public passport;
+    RecyclingRewards      public rewards;
 
     // ─── Estruturas ───────────────────────────────────────────────────
     struct WasteEvent {
@@ -50,11 +52,13 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
     constructor(
         address admin,
         address categoryRegistryAddr,
-        address passportAddr
+        address passportAddr,
+        address rewardsAddr
     ) {
         _grantRole(ADMIN_ROLE, admin);
         categoryRegistry = WasteCategoryRegistry(categoryRegistryAddr);
         passport         = MaterialPassport(passportAddr);
+        rewards          = RecyclingRewards(rewardsAddr);
     }
 
     // ─── Funções de Rastreio ──────────────────────────────────────────
@@ -64,7 +68,7 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
         uint256         tokenId,
         string calldata location,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(COLLECTOR_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.REGISTERED,
@@ -86,7 +90,7 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
         uint256         tokenId,
         address         nextHolder,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(COLLECTOR_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.COLLECTED,
@@ -105,7 +109,7 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
         uint256         tokenId,
         string calldata location,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(OPERATOR_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.IN_TRANSIT ||
@@ -123,7 +127,7 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
     function registerProcessing(
         uint256         tokenId,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(RECYCLER_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.TRIAGED,
@@ -135,12 +139,13 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
         emit WasteProcessed(tokenId, msg.sender, p.weightKg);
     }
 
-    /// @notice Finaliza a reciclagem — aciona emissão de créditos
+    /// @notice Finaliza a reciclagem — aciona emissão de créditos ao chamador
+    /// @param actualWeightGrams peso real após processamento, em gramas (pode ser < original)
     function registerRecycled(
         uint256         tokenId,
-        uint256         actualWeightKg, // peso real após processamento (pode ser < original)
+        uint256         actualWeightGrams,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(RECYCLER_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.PROCESSING,
@@ -148,16 +153,20 @@ contract WasteTracker is AccessControl, ReentrancyGuard {
         );
 
         passport.updateStatus(tokenId, MaterialPassport.MaterialStatus.RECYCLED, notes);
-        _recordEvent(tokenId, p.externalProductId, msg.sender, 4, actualWeightKg, "", notes);
+        _recordEvent(tokenId, p.externalProductId, msg.sender, 4, actualWeightGrams, "", notes);
 
-        emit WasteRecycled(tokenId, msg.sender, actualWeightKg, p.categoryId);
+        // Emissão atômica: se a recompensa reverter, o registro da reciclagem
+        // reverte junto — não fica um estado "reciclado sem crédito emitido".
+        rewards.issueReward(tokenId, msg.sender, actualWeightGrams);
+
+        emit WasteRecycled(tokenId, msg.sender, actualWeightGrams, p.categoryId);
     }
 
     /// @notice Registra reinserção na cadeia produtiva
     function registerReinserted(
         uint256         tokenId,
         string calldata notes
-    ) external nonReentrant {
+    ) external nonReentrant onlyRole(OPERATOR_ROLE) {
         MaterialPassport.PassportCore memory p = passport.getPassportCore(tokenId);
         require(
             p.status == MaterialPassport.MaterialStatus.RECYCLED,

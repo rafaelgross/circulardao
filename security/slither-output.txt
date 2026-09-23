@@ -1,0 +1,674 @@
+'npx hardhat clean' running (wd: /opt/apps/dao-tese)
+'npx hardhat clean --global' running (wd: /opt/apps/dao-tese)
+'npx hardhat compile --force' running (wd: /opt/apps/dao-tese)
+INFO:Detectors:
+Detector: arbitrary-send-eth
+Governor._executeOperations(uint256,address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#434-445) sends eth to arbitrary user
+	Dangerous calls:
+	- (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (node_modules/@openzeppelin/contracts/governance/Governor.sol#442)
+Governor.relay(address,uint256,bytes) (node_modules/@openzeppelin/contracts/governance/Governor.sol#656-659) sends eth to arbitrary user
+	Dangerous calls:
+	- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/governance/Governor.sol#657)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#functions-that-send-ether-to-arbitrary-destinations
+INFO:Detectors:
+Detector: incorrect-exp
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#259)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-exponentiation
+INFO:Detectors:
+Detector: shadowing-state
+Governor._name (node_modules/@openzeppelin/contracts/governance/Governor.sol#48) shadows:
+	- EIP712._name (node_modules/@openzeppelin/contracts/utils/cryptography/EIP712.sol#49)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variable-shadowing
+INFO:Detectors:
+Detector: divide-before-multiply
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#259)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#263)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#264)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#265)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#266)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#267)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#244)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#268)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) performs a multiplication on the result of a division:
+	- low = low / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#247)
+	- result = low * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#274)
+Math.invMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#317-363) performs a multiplication on the result of a division:
+	- quotient = gcd / remainder (node_modules/@openzeppelin/contracts/utils/math/Math.sol#339)
+	- (gcd,remainder) = (remainder,gcd - remainder * quotient) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#341-348)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+INFO:Detectors:
+Detector: unused-return
+SignatureChecker.isValidSignatureNow(address,bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#32-39) ignores return value by (recovered,err,None) = ECDSA.tryRecover(hash,signature) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#34)
+SignatureChecker.isValidSignatureNowCalldata(address,bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#44-55) ignores return value by (recovered,err,None) = ECDSA.tryRecoverCalldata(hash,signature) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#50)
+Time.get(Time.Delay) (node_modules/@openzeppelin/contracts/utils/types/Time.sol#93-96) ignores return value by (delay,None,None) = self.getFull() (node_modules/@openzeppelin/contracts/utils/types/Time.sol#94)
+GovernorVotesQuorumFraction._updateQuorumNumerator(uint256) (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#89-99) ignores return value by _quorumNumeratorHistory.push(clock(),SafeCast.toUint208(newQuorumNumerator)) (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#96)
+GovernorVotesQuorumFraction._optimisticUpperLookupRecent(Checkpoints.Trace208,uint256) (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#104-112) ignores return value by (None,key,value) = ckpts.latestCheckpoint() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#110)
+Governor._executeOperations(uint256,address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#434-445) ignores return value by Address.verifyCallResult(success,returndata) (node_modules/@openzeppelin/contracts/governance/Governor.sol#443)
+Governor.relay(address,uint256,bytes) (node_modules/@openzeppelin/contracts/governance/Governor.sol#656-659) ignores return value by Address.verifyCallResult(success,returndata) (node_modules/@openzeppelin/contracts/governance/Governor.sol#658)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors:
+Detector: shadowing-local
+CircularDAO.constructor(IVotes,address,address,address,address,uint48,uint32).token (contracts/core/CircularDAO.sol#86) shadows:
+	- GovernorVotes.token() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotes.sol#25-27) (function)
+CircularDAO.proposeAddCategory(string,string,string,uint256,uint8,string,string,string).name (contracts/core/CircularDAO.sol#114) shadows:
+	- Governor.name() (node_modules/@openzeppelin/contracts/governance/Governor.sol#99-101) (function)
+	- IGovernor.name() (node_modules/@openzeppelin/contracts/governance/IGovernor.sol#171) (function)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#local-variable-shadowing
+INFO:Detectors:
+Detector: events-maths
+DAO.setVotingPeriod(uint256) (contracts/DAO.sol#137-140) should emit an event for: 
+	- votingPeriod = _days * 86400 (contracts/DAO.sol#139) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-arithmetic
+INFO:Detectors:
+Detector: missing-zero-check
+Governor.relay(address,uint256,bytes).target (node_modules/@openzeppelin/contracts/governance/Governor.sol#656) lacks a zero-check on :
+		- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/governance/Governor.sol#657)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+INFO:Detectors:
+Detector: calls-loop
+Governor._executeOperations(uint256,address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#434-445) has external calls inside a loop: (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (node_modules/@openzeppelin/contracts/governance/Governor.sol#442)
+	Calls stack containing the loop:
+		Governor.execute(address[],uint256[],bytes[],bytes32)
+GovernorVotes.clock() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotes.sol#33-39) has external calls inside a loop: timepoint = token().clock() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotes.sol#34-38)
+	Calls stack containing the loop:
+		CircularDAO.getActiveProposals()
+		Governor.state(uint256)
+GovernorVotesQuorumFraction.quorum(uint256) (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#62-64) has external calls inside a loop: Math.mulDiv(token().getPastTotalSupply(timepoint),quorumNumerator(timepoint),quorumDenominator()) (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#63)
+	Calls stack containing the loop:
+		CircularDAO.getActiveProposals()
+		Governor.state(uint256)
+		GovernorCountingSimple._quorumReached(uint256)
+		CircularDAO.quorum(uint256)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Detector: reentrancy-benign
+Reentrancy in WasteTracker.registerCollection(uint256,string,string) (contracts/core/WasteTracker.sol#67-86):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.COLLECTED,notes) (contracts/core/WasteTracker.sol#78)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,0,p.weightKg,location,notes) (contracts/core/WasteTracker.sol#79)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,0,p.weightKg,location,notes) (contracts/core/WasteTracker.sol#79)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+	- totalWeightProcessed += p.weightKg (contracts/core/WasteTracker.sol#83)
+	- weightByActor[msg.sender] += p.weightKg (contracts/core/WasteTracker.sol#81)
+	- weightByCat[p.categoryId] += p.weightKg (contracts/core/WasteTracker.sol#82)
+Reentrancy in WasteTracker.registerProcessing(uint256,string) (contracts/core/WasteTracker.sol#127-140):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.PROCESSING,notes) (contracts/core/WasteTracker.sol#137)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,3,p.weightKg,,notes) (contracts/core/WasteTracker.sol#138)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,3,p.weightKg,,notes) (contracts/core/WasteTracker.sol#138)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+Reentrancy in WasteTracker.registerRecycled(uint256,uint256,string) (contracts/core/WasteTracker.sol#144-163):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.RECYCLED,notes) (contracts/core/WasteTracker.sol#155)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,4,actualWeightGrams,,notes) (contracts/core/WasteTracker.sol#156)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,4,actualWeightGrams,,notes) (contracts/core/WasteTracker.sol#156)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+Reentrancy in WasteTracker.registerReinserted(uint256,string) (contracts/core/WasteTracker.sol#166-180):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.REINSERTED,notes) (contracts/core/WasteTracker.sol#176)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,5,p.weightKg,,notes) (contracts/core/WasteTracker.sol#177)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,5,p.weightKg,,notes) (contracts/core/WasteTracker.sol#177)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+Reentrancy in WasteTracker.registerTransit(uint256,address,string) (contracts/core/WasteTracker.sol#89-105):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.IN_TRANSIT,notes) (contracts/core/WasteTracker.sol#100)
+	- passport.transferHolder(tokenId,nextHolder,notes) (contracts/core/WasteTracker.sol#101)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,1,p.weightKg,,notes) (contracts/core/WasteTracker.sol#102)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,1,p.weightKg,,notes) (contracts/core/WasteTracker.sol#102)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+Reentrancy in WasteTracker.registerTriagem(uint256,string,string) (contracts/core/WasteTracker.sol#108-124):
+	External calls:
+	- passport.updateStatus(tokenId,MaterialPassport.MaterialStatus.TRIAGED,notes) (contracts/core/WasteTracker.sol#120)
+	State variables written after the call(s):
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,2,p.weightKg,location,notes) (contracts/core/WasteTracker.sol#121)
+		- eventsByToken[tokenId].push(WasteEvent({tokenId:tokenId,productId:productId,actor:actor,action:action,weightKg:weightKg,timestamp:block.timestamp,location:location,notes:notes})) (contracts/core/WasteTracker.sol#207-216)
+	- _recordEvent(tokenId,p.externalProductId,msg.sender,2,p.weightKg,location,notes) (contracts/core/WasteTracker.sol#121)
+		- totalEventsRecorded ++ (contracts/core/WasteTracker.sol#217)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+Detector: reentrancy-events
+Reentrancy in Governor.execute(address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#390-425):
+	External calls:
+	- _executeOperations(proposalId,targets,values,calldatas,descriptionHash) (node_modules/@openzeppelin/contracts/governance/Governor.sol#415)
+		- (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (node_modules/@openzeppelin/contracts/governance/Governor.sol#442)
+	Event emitted after the call(s):
+	- ProposalExecuted(proposalId) (node_modules/@openzeppelin/contracts/governance/Governor.sol#422)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4
+INFO:Detectors:
+Detector: timestamp
+Votes.delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32) (node_modules/@openzeppelin/contracts/governance/utils/Votes.sol#144-163) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > expiry (node_modules/@openzeppelin/contracts/governance/utils/Votes.sol#152)
+Time._getFullAt(Time.Delay,uint48) (node_modules/@openzeppelin/contracts/utils/types/Time.sol#74-80) uses timestamp for comparisons
+	Dangerous comparisons:
+	- effect <= timepoint (node_modules/@openzeppelin/contracts/utils/types/Time.sol#79)
+DAO.vote(uint256,bool) (contracts/DAO.sol#90-106) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(block.timestamp <= proposal.deadline,DAO: votacao encerrada) (contracts/DAO.sol#96)
+DAO.executeProposal(uint256) (contracts/DAO.sol#108-121) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(block.timestamp > proposal.deadline,DAO: votacao ainda ativa) (contracts/DAO.sol#115)
+	- require(bool,string)(! proposal.executed,DAO: ja executada) (contracts/DAO.sol#116)
+WasteCategoryRegistry.updateCredits(uint256,uint256) (contracts/core/WasteCategoryRegistry.sol#104-108) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(categories[id].id != 0,Category: nao encontrada) (contracts/core/WasteCategoryRegistry.sol#105)
+WasteCategoryRegistry.deactivate(uint256) (contracts/core/WasteCategoryRegistry.sol#110-114) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(categories[id].id != 0,Category: nao encontrada) (contracts/core/WasteCategoryRegistry.sol#111)
+WasteCategoryRegistry.getCategory(uint256) (contracts/core/WasteCategoryRegistry.sol#117-120) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(categories[id].id != 0,Category: nao encontrada) (contracts/core/WasteCategoryRegistry.sol#118)
+WasteCategoryRegistry.isValid(uint256) (contracts/core/WasteCategoryRegistry.sol#132-134) uses timestamp for comparisons
+	Dangerous comparisons:
+	- categories[id].id != 0 && categories[id].active (contracts/core/WasteCategoryRegistry.sol#133)
+WasteCategoryRegistry.getCreditsPerKg(uint256) (contracts/core/WasteCategoryRegistry.sol#136-139) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(categories[categoryId].id != 0,Category: nao encontrada) (contracts/core/WasteCategoryRegistry.sol#137)
+StakeholderRegistry.isActive(address) (contracts/identity/StakeholderRegistry.sol#153-155) uses timestamp for comparisons
+	Dangerous comparisons:
+	- isRegistered[wallet] && stakeholders[wallet].active (contracts/identity/StakeholderRegistry.sol#154)
+MaterialPassport.updateStatus(uint256,MaterialPassport.MaterialStatus,string) (contracts/tokens/MaterialPassport.sol#148-169) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(pc.tokenId != 0,Passport: nao encontrado) (contracts/tokens/MaterialPassport.sol#154)
+MaterialPassport.transferHolder(uint256,address,string) (contracts/tokens/MaterialPassport.sol#171-191) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(pc.tokenId != 0,Passport: nao encontrado) (contracts/tokens/MaterialPassport.sol#177)
+MaterialPassport.getPassportCore(uint256) (contracts/tokens/MaterialPassport.sol#193-196) uses timestamp for comparisons
+	Dangerous comparisons:
+	- require(bool,string)(passports[tokenId].tokenId != 0,Passport: nao encontrado) (contracts/tokens/MaterialPassport.sol#194)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: assembly
+Governor._unsafeReadBytesOffset(bytes,uint256) (node_modules/@openzeppelin/contracts/governance/Governor.sol#813-818) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/governance/Governor.sol#815-817)
+ERC1155._asSingletonArrays(uint256,uint256) (node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol#396-416) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol#400-415)
+ERC1155Utils.checkOnERC1155Received(address,address,address,uint256,uint256,bytes) (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#25-50) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#44-46)
+ERC1155Utils.checkOnERC1155BatchReceived(address,address,address,uint256[],uint256[],bytes) (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#60-87) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#81-83)
+Arrays._begin(uint256[]) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#142-146) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#143-145)
+Arrays._mload(uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#161-165) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#162-164)
+Arrays._swap(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#170-177) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#171-176)
+Arrays._castToUint256Array(address[]) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#180-184) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#181-183)
+Arrays._castToUint256Array(bytes32[]) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#187-191) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#188-190)
+Arrays._castToUint256Comp(function(address,address) returns(bool)) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#194-200) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#197-199)
+Arrays._castToUint256Comp(function(bytes32,bytes32) returns(bool)) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#203-209) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#206-208)
+Arrays.slice(address[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#394-406) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#401-403)
+Arrays.slice(bytes32[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#424-436) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#431-433)
+Arrays.slice(uint256[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#454-466) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#461-463)
+Arrays.splice(address[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#485-497) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#491-494)
+Arrays.replace(address[],uint256,address[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#526-548) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#539-545)
+Arrays.splice(bytes32[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#567-579) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#573-576)
+Arrays.replace(bytes32[],uint256,bytes32[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#608-630) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#621-627)
+Arrays.splice(uint256[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#649-661) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#655-658)
+Arrays.replace(uint256[],uint256,uint256[],uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#690-712) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#703-709)
+Arrays.unsafeAccess(address[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#719-725) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#721-723)
+Arrays.unsafeAccess(bytes32[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#732-738) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#734-736)
+Arrays.unsafeAccess(uint256[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#745-751) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#747-749)
+Arrays.unsafeAccess(bytes[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#758-764) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#760-762)
+Arrays.unsafeAccess(string[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#771-777) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#773-775)
+Arrays.unsafeMemoryAccess(address[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#784-788) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#785-787)
+Arrays.unsafeMemoryAccess(bytes32[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#795-799) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#796-798)
+Arrays.unsafeMemoryAccess(uint256[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#806-810) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#807-809)
+Arrays.unsafeMemoryAccess(bytes[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#817-821) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#818-820)
+Arrays.unsafeMemoryAccess(string[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#828-832) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#829-831)
+Arrays.unsafeSetLength(address[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#839-843) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#840-842)
+Arrays.unsafeSetLength(bytes32[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#850-854) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#851-853)
+Arrays.unsafeSetLength(uint256[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#861-865) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#862-864)
+Arrays.unsafeSetLength(bytes[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#872-876) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#873-875)
+Arrays.unsafeSetLength(string[],uint256) (node_modules/@openzeppelin/contracts/utils/Arrays.sol#883-887) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Arrays.sol#884-886)
+Bytes.slice(bytes,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#86-98) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#93-95)
+Bytes.splice(bytes,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#117-129) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#123-126)
+Bytes.replace(bytes,uint256,bytes,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#154-172) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#167-169)
+Bytes.concat(bytes[]) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#183-203) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#194-196)
+Bytes.toNibbles(bytes) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#210-245) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#211-244)
+Bytes._unsafeReadBytesOffset(bytes,uint256) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#326-331) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Bytes.sol#328-330)
+LowLevelCall.callNoReturn(address,uint256,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#19-23) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#20-22)
+LowLevelCall.callReturn64Bytes(address,uint256,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#38-48) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#43-47)
+LowLevelCall.staticcallNoReturn(address,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#51-55) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#52-54)
+LowLevelCall.staticcallReturn64Bytes(address,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#62-71) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#66-70)
+LowLevelCall.delegatecallNoReturn(address,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#74-78) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#75-77)
+LowLevelCall.delegatecallReturn64Bytes(address,bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#85-94) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#89-93)
+LowLevelCall.returnDataSize() (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#97-101) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#98-100)
+LowLevelCall.returnData() (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#104-111) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#105-110)
+LowLevelCall.bubbleRevert() (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#114-120) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#115-119)
+LowLevelCall.bubbleRevert(bytes) (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#122-126) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#123-125)
+Panic.panic(uint256) (node_modules/@openzeppelin/contracts/utils/Panic.sol#50-56) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Panic.sol#51-55)
+ShortStrings.toString(ShortString) (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#63-72) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#67-70)
+SlotDerivation.erc7201Slot(string) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#45-50) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#46-49)
+SlotDerivation.deriveArray(bytes32) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#64-69) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#65-68)
+SlotDerivation.deriveMapping(bytes32,address) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#74-80) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#75-79)
+SlotDerivation.deriveMapping(bytes32,bool) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#85-91) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#86-90)
+SlotDerivation.deriveMapping(bytes32,bytes32) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#96-102) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#97-101)
+SlotDerivation.deriveMapping(bytes32,uint256) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#107-113) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#108-112)
+SlotDerivation.deriveMapping(bytes32,int256) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#118-124) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#119-123)
+SlotDerivation.deriveMapping(bytes32,string) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#129-139) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#130-138)
+SlotDerivation.deriveMapping(bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#144-154) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#145-153)
+StorageSlot.getAddressSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#66-70) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#67-69)
+StorageSlot.getBooleanSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#75-79) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#76-78)
+StorageSlot.getBytes32Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#84-88) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#85-87)
+StorageSlot.getUint256Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#93-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#94-96)
+StorageSlot.getInt256Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#102-106) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#103-105)
+StorageSlot.getStringSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#111-115) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#112-114)
+StorageSlot.getStringSlot(string) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#120-124) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#121-123)
+StorageSlot.getBytesSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#129-133) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#130-132)
+StorageSlot.getBytesSlot(bytes) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#138-142) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#139-141)
+Strings.toString(uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#42-60) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#47-49)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#52-54)
+Strings.toChecksumHexString(address) (node_modules/@openzeppelin/contracts/utils/Strings.sol#108-126) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#113-115)
+Strings.escapeJSON(string) (node_modules/@openzeppelin/contracts/utils/Strings.sol#461-505) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#468-470)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#499-502)
+Strings._unsafeReadBytesOffset(bytes,uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#513-518) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#515-517)
+Strings._unsafeWriteBytesOffset(bytes,uint256,bytes1) (node_modules/@openzeppelin/contracts/utils/Strings.sol#526-531) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#528-530)
+ECDSA.tryRecover(bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#61-80) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#71-75)
+ECDSA.tryRecoverCalldata(bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#85-104) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#95-99)
+ECDSA.parse(bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#217-240) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#218-239)
+ECDSA.parseCalldata(bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#245-268) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#246-267)
+MessageHashUtils.toEthSignedMessageHash(bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#32-38) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#33-37)
+MessageHashUtils.toDataWithIntendedValidatorHash(address,bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#71-81) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#75-80)
+MessageHashUtils.toTypedDataHash(bytes32,bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#92-100) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#93-99)
+MessageHashUtils.toDomainSeparator(bytes1,bytes32,bytes32,uint256,address,bytes32) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#137-179) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#147-178)
+MessageHashUtils.toDomainTypeHash(bytes1) (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#182-227) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#185-226)
+SignatureChecker.isValidERC1271SignatureNow(address,bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#64-88) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#72-87)
+SignatureChecker.isValidERC1271SignatureNowCalldata(address,bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#90-115) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#98-114)
+Math.add512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#25-30) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#26-29)
+Math.mul512(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#37-46) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#41-45)
+Math.tryMul(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#73-84) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#76-80)
+Math.tryDiv(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#89-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#92-95)
+Math.tryMod(uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#102-110) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#105-108)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#206-277) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#229-236)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#242-251)
+Math.tryModExp(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#411-435) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#413-434)
+Math.tryModExp(bytes,bytes,bytes) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#451-473) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#463-472)
+Math._zeroBytes(bytes) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#478-490) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#482-484)
+Math.log2(uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#619-658) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#655-657)
+SafeCast.toUint(bool) (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1157-1161) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#1158-1160)
+Checkpoints._unsafeAccess(Checkpoints.Checkpoint256[],uint256) (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#215-223) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#219-222)
+Checkpoints._unsafeAccess(Checkpoints.Checkpoint224[],uint256) (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#418-426) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#422-425)
+Checkpoints._unsafeAccess(Checkpoints.Checkpoint208[],uint256) (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#621-629) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#625-628)
+Checkpoints._unsafeAccess(Checkpoints.Checkpoint160[],uint256) (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#824-832) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#828-831)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+Detector: pragma
+7 different versions of Solidity are used:
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (node_modules/@openzeppelin/contracts/access/AccessControl.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Comparators.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Errors.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Nonces.sol#3)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/Panic.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#5)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol#3)
+		-^0.8.20 (node_modules/@openzeppelin/contracts/utils/types/Time.sol#4)
+		-^0.8.20 (contracts/DAO.sol#2)
+		-^0.8.20 (contracts/core/CircularDAO.sol#2)
+		-^0.8.20 (contracts/core/RecyclingRewards.sol#2)
+		-^0.8.20 (contracts/core/WasteCategoryRegistry.sol#2)
+		-^0.8.20 (contracts/core/WasteTracker.sol#2)
+		-^0.8.20 (contracts/identity/StakeholderRegistry.sol#2)
+		-^0.8.20 (contracts/tokens/CircularCredit.sol#2)
+	- Version constraint >=0.8.4 is used by:
+		->=0.8.4 (node_modules/@openzeppelin/contracts/access/IAccessControl.sol#4)
+		->=0.8.4 (node_modules/@openzeppelin/contracts/governance/IGovernor.sol#4)
+		->=0.8.4 (node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol#4)
+		->=0.8.4 (node_modules/@openzeppelin/contracts/interfaces/IERC5805.sol#4)
+		->=0.8.4 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#4)
+	- Version constraint ^0.8.24 is used by:
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/Governor.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/extensions/GovernorSettings.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotes.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/governance/utils/Votes.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/Arrays.sol#5)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/Bytes.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/cryptography/EIP712.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol#4)
+		-^0.8.24 (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#4)
+	- Version constraint >=0.5.0 is used by:
+		->=0.5.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1271.sol#4)
+		->=0.5.0 (node_modules/@openzeppelin/contracts/interfaces/IERC7913.sol#4)
+		->=0.5.0 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#4)
+	- Version constraint >=0.4.16 is used by:
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC165.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC5267.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC6372.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+		->=0.4.16 (node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#4)
+	- Version constraint >=0.6.2 is used by:
+		->=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol#4)
+		->=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol#4)
+		->=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol#4)
+		->=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#4)
+	- Version constraint ^0.8.28 is used by:
+		-^0.8.28 (contracts/tokens/GovernanceToken.sol#2)
+		-^0.8.28 (contracts/tokens/MaterialPassport.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Detector: solc-version
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/access/AccessControl.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC1155/utils/ERC1155Utils.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Comparators.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Errors.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/LowLevelCall.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Nonces.sol#3)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/Panic.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol#5)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol#5)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/structs/Checkpoints.sol#5)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol#3)
+	- ^0.8.20 (node_modules/@openzeppelin/contracts/utils/types/Time.sol#4)
+	- ^0.8.20 (contracts/DAO.sol#2)
+	- ^0.8.20 (contracts/core/CircularDAO.sol#2)
+	- ^0.8.20 (contracts/core/RecyclingRewards.sol#2)
+	- ^0.8.20 (contracts/core/WasteCategoryRegistry.sol#2)
+	- ^0.8.20 (contracts/core/WasteTracker.sol#2)
+	- ^0.8.20 (contracts/identity/StakeholderRegistry.sol#2)
+	- ^0.8.20 (contracts/tokens/CircularCredit.sol#2)
+Version constraint >=0.8.4 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables.
+It is used by:
+	- >=0.8.4 (node_modules/@openzeppelin/contracts/access/IAccessControl.sol#4)
+	- >=0.8.4 (node_modules/@openzeppelin/contracts/governance/IGovernor.sol#4)
+	- >=0.8.4 (node_modules/@openzeppelin/contracts/governance/utils/IVotes.sol#4)
+	- >=0.8.4 (node_modules/@openzeppelin/contracts/interfaces/IERC5805.sol#4)
+	- >=0.8.4 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol#4)
+Version constraint >=0.5.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- DirtyBytesArrayToStorage
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow
+	- privateCanBeOverridden
+	- SignedArrayStorageCopy
+	- ABIEncoderV2StorageArrayWithMultiSlotElement
+	- DynamicConstructorArgumentsClippedABIV2
+	- UninitializedFunctionPointerInConstructor
+	- IncorrectEventSignatureInLibraries
+	- ABIEncoderV2PackedStorage.
+It is used by:
+	- >=0.5.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1271.sol#4)
+	- >=0.5.0 (node_modules/@openzeppelin/contracts/interfaces/IERC7913.sol#4)
+	- >=0.5.0 (node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol#4)
+Version constraint >=0.4.16 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- DirtyBytesArrayToStorage
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow
+	- privateCanBeOverridden
+	- SignedArrayStorageCopy
+	- ABIEncoderV2StorageArrayWithMultiSlotElement
+	- DynamicConstructorArgumentsClippedABIV2
+	- UninitializedFunctionPointerInConstructor_0.4.x
+	- IncorrectEventSignatureInLibraries_0.4.x
+	- ExpExponentCleanup
+	- NestedArrayFunctionCallDecoder
+	- ZeroFunctionSelector.
+It is used by:
+	- >=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC165.sol#4)
+	- >=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC5267.sol#4)
+	- >=0.4.16 (node_modules/@openzeppelin/contracts/interfaces/IERC6372.sol#4)
+	- >=0.4.16 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+	- >=0.4.16 (node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol#4)
+Version constraint >=0.6.2 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching
+	- EmptyByteArrayCopy
+	- DynamicArrayCleanup
+	- MissingEscapingInFormatting
+	- ArraySliceDynamicallyEncodedBaseType
+	- ImplicitConstructorCallvalueCheck
+	- TupleAssignmentMultiStackSlotComponents
+	- MemoryArrayCreationOverflow.
+It is used by:
+	- >=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol#4)
+	- >=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol#4)
+	- >=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol#4)
+	- >=0.6.2 (node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#4)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in Governor._executeOperations(uint256,address[],uint256[],bytes[],bytes32) (node_modules/@openzeppelin/contracts/governance/Governor.sol#434-445):
+	- (success,returndata) = targets[i].call{value: values[i]}(calldatas[i]) (node_modules/@openzeppelin/contracts/governance/Governor.sol#442)
+Low level call in Governor.relay(address,uint256,bytes) (node_modules/@openzeppelin/contracts/governance/Governor.sol#656-659):
+	- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/governance/Governor.sol#657)
+Low level call in SignatureChecker.isValidSignatureNow(bytes,bytes32,bytes) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#132-149):
+	- (success,result) = address(bytes20(signer)).staticcall(abi.encodeCall(IERC7913SignatureVerifier.verify,(signer.slice(20),hash,signature))) (node_modules/@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol#142-144)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Function Governor.CLOCK_MODE() (node_modules/@openzeppelin/contracts/governance/Governor.sol#796) is not in mixedCase
+Function IGovernor.COUNTING_MODE() (node_modules/@openzeppelin/contracts/governance/IGovernor.sol#202) is not in mixedCase
+Function GovernorCountingSimple.COUNTING_MODE() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol#32-34) is not in mixedCase
+Function GovernorVotes.CLOCK_MODE() (node_modules/@openzeppelin/contracts/governance/extensions/GovernorVotes.sol#45-51) is not in mixedCase
+Function Votes.CLOCK_MODE() (node_modules/@openzeppelin/contracts/governance/utils/Votes.sol#67-73) is not in mixedCase
+Function IERC6372.CLOCK_MODE() (node_modules/@openzeppelin/contracts/interfaces/IERC6372.sol#16) is not in mixedCase
+Function EIP712._EIP712Name() (node_modules/@openzeppelin/contracts/utils/cryptography/EIP712.sol#146-148) is not in mixedCase
+Function EIP712._EIP712Version() (node_modules/@openzeppelin/contracts/utils/cryptography/EIP712.sol#157-159) is not in mixedCase
+Parameter DAO.addMember(address)._member (contracts/DAO.sol#58) is not in mixedCase
+Parameter DAO.removeMember(address)._member (contracts/DAO.sol#65) is not in mixedCase
+Parameter DAO.createProposal(string)._description (contracts/DAO.sol#74) is not in mixedCase
+Parameter DAO.isMember(address)._address (contracts/DAO.sol#133) is not in mixedCase
+Parameter DAO.setVotingPeriod(uint256)._days (contracts/DAO.sol#137) is not in mixedCase
+Function CircularDAO.COUNTING_MODE() (contracts/core/CircularDAO.sol#281-284) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Detector: too-many-digits
+Bytes.toNibbles(bytes) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#210-245) uses literals with too many digits:
+	- chunk_toNibbles_asm_0 = 0x0000000000000000ffffffffffffffff0000000000000000ffffffffffffffff & chunk_toNibbles_asm_0 << 64 | chunk_toNibbles_asm_0 (node_modules/@openzeppelin/contracts/utils/Bytes.sol#222-225)
+Bytes.toNibbles(bytes) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#210-245) uses literals with too many digits:
+	- chunk_toNibbles_asm_0 = 0x00000000ffffffff00000000ffffffff00000000ffffffff00000000ffffffff & chunk_toNibbles_asm_0 << 32 | chunk_toNibbles_asm_0 (node_modules/@openzeppelin/contracts/utils/Bytes.sol#226-229)
+Bytes.reverseBytes32(bytes32) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#258-272) uses literals with too many digits:
+	- value = ((value >> 32) & 0x00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF) | ((value & 0x00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF) << 32) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#265-267)
+Bytes.reverseBytes32(bytes32) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#258-272) uses literals with too many digits:
+	- value = ((value >> 64) & 0x0000000000000000FFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF) | ((value & 0x0000000000000000FFFFFFFFFFFFFFFF0000000000000000FFFFFFFFFFFFFFFF) << 64) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#268-270)
+Bytes.reverseBytes16(bytes16) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#275-286) uses literals with too many digits:
+	- value = ((value & 0xFFFFFFFF00000000FFFFFFFF00000000) >> 32) | ((value & 0x00000000FFFFFFFF00000000FFFFFFFF) << 32) (node_modules/@openzeppelin/contracts/utils/Bytes.sol#282-284)
+ShortStrings.slitherConstructorConstantVariables() (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#40-122) uses literals with too many digits:
+	- FALLBACK_SENTINEL = 0x00000000000000000000000000000000000000000000000000000000000000FF (node_modules/@openzeppelin/contracts/utils/ShortStrings.sol#42)
+Math.log2(uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#619-658) uses literals with too many digits:
+	- r = r | byte(uint256,uint256)(x >> r,0x0000010102020202030303030303030300000000000000000000000000000000) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#656)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits
+INFO:Detectors:
+Detector: unindexed-event-address
+Event IGovernor.ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string) (node_modules/@openzeppelin/contracts/governance/IGovernor.sol#118-128) has address parameters but no indexed parameters
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters
+INFO:Detectors:
+Detector: cache-array-length
+Loop condition i < allProposalIds.length (contracts/core/CircularDAO.sol#213) should use cached array length instead of referencing `length` member of the storage array.
+ Loop condition i_scope_0 < allProposalIds.length (contracts/core/CircularDAO.sol#218) should use cached array length instead of referencing `length` member of the storage array.
+ Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cache-array-length
+INFO:Detectors:
+Detector: constable-states
+RecyclingRewards.maxBonusMultiplierBp (contracts/core/RecyclingRewards.sol#27) should be constant 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-constant
+INFO:Detectors:
+Detector: immutable-states
+CircularDAO.categoryRegistry (contracts/core/CircularDAO.sol#31) should be immutable 
+CircularDAO.rewardsContract (contracts/core/CircularDAO.sol#32) should be immutable 
+CircularDAO.stakeholderRegistry (contracts/core/CircularDAO.sol#33) should be immutable 
+RecyclingRewards.categoryRegistry (contracts/core/RecyclingRewards.sol#21) should be immutable 
+RecyclingRewards.creditToken (contracts/core/RecyclingRewards.sol#22) should be immutable 
+RecyclingRewards.passport (contracts/core/RecyclingRewards.sol#23) should be immutable 
+WasteTracker.categoryRegistry (contracts/core/WasteTracker.sol#21) should be immutable 
+WasteTracker.passport (contracts/core/WasteTracker.sol#22) should be immutable 
+WasteTracker.rewards (contracts/core/WasteTracker.sol#23) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+INFO:Slither:. analyzed (66 contracts with 102 detectors), 192 result(s) found
